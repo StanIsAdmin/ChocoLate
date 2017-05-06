@@ -1,9 +1,10 @@
 package pieces;
 
 
-
+import java.util.List;
 import org.chocosolver.solver.Model;
 import org.chocosolver.solver.expression.discrete.relational.ReExpression;
+
 
 /**
  * Represents a knight piece of a chess game.
@@ -21,8 +22,13 @@ public class Knight extends Piece {
     }
     
     @Override
-    public ReExpression menaces(Positioned other) {
-        return getX().dist(other.getX()).eq(2).and(getY().dist(other.getY()).eq(1)).or(
-            getX().dist(other.getX()).eq(1).and(getY().dist(other.getY()).eq(2)));
+    public ReExpression menaces(Positioned target) {
+        return getX().dist(target.getX()).eq(2).and(getY().dist(target.getY()).eq(1)).or(
+            getX().dist(target.getX()).eq(1).and(getY().dist(target.getY()).eq(2)));
+    }
+    
+    @Override
+    public ReExpression menaces(Positioned target, List<Piece> others) {
+        return menaces(target);
     }
 }

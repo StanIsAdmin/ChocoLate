@@ -1,9 +1,11 @@
 package problems;
 
+
 import java.util.ArrayList;
 import org.chocosolver.solver.constraints.Constraint;
 import pieces.Position;
 import pieces.Piece;
+
 
 /**
  * Represents a chess domination problem.
@@ -18,11 +20,11 @@ public class DominationProblem extends ChessProblem {
     protected void setConstraints() {
         super.setConstraints();
         for (Position position : _boardPositions) {
-            ArrayList<Constraint> allMenaces = new ArrayList<>();
+            ArrayList<Constraint> anyMenaces = new ArrayList<>();
             for (Piece piece : _chessPieces) {
-                allMenaces.add(piece.menaces(position).or(piece.hasSamePosition(position)).decompose());
+                anyMenaces.add(piece.menaces(position, _chessPieces).or(piece.occupies(position)).decompose());
             }
-            _solverModel.or(allMenaces.toArray(new Constraint[allMenaces.size()])).post();
+            _solverModel.or(anyMenaces.toArray(new Constraint[anyMenaces.size()])).post();
         }
     }
     

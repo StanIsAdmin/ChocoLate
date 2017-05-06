@@ -74,7 +74,7 @@ public abstract class ChessProblem {
         for (Piece pieceA : _chessPieces) {
             for (Piece pieceB : _chessPieces) {
                 if (pieceA != pieceB) {
-                    pieceA.hasSamePosition(pieceB).not().post();
+                    pieceA.occupies(pieceB).not().post();
                 }
             }
         }
