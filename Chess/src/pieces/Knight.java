@@ -16,6 +16,11 @@ public class Knight extends Piece {
     }
     
     @Override
+    public String getName() {
+        return "K";
+    }
+    
+    @Override
     public ReExpression menaces(Piece other) {
         return _xCoordinate.dist(other.getXCoordinate()).eq(2).and(_yCoordinate.dist(other.getYCoordinate()).eq(1)).or(
             _xCoordinate.dist(other.getXCoordinate()).eq(1).and(_yCoordinate.dist(other.getYCoordinate()).eq(2)));

@@ -12,6 +12,11 @@ public class Rook extends Piece {
     public Rook(String name, Model solverModel, int boardSize) {
         super(name, solverModel, boardSize);
     }
+    
+    @Override
+    public String getName() {
+        return "R";
+    }
 
     @Override
     public ReExpression menaces(Piece other) {

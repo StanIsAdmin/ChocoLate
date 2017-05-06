@@ -24,6 +24,9 @@ public abstract class ChessProblem {
     /*The chess pieces on the board game*/
     protected List<Piece> _chessPieces;
     
+    /*The board positions*/
+    protected List<Piece> _boardPositions;
+    
     /**
      * Creates an abstract chess problem.
      * @param boardSize the size of the chess board
@@ -35,6 +38,7 @@ public abstract class ChessProblem {
         _boardSize = boardSize;
         _solverModel = new Model();
         initChessPieces(rooks, bishops, knights);
+        initBoardPositions();
         setConstraints();
     }
     
@@ -57,6 +61,10 @@ public abstract class ChessProblem {
         }
     }
     
+    private void initBoardPositions() {
+        
+    }
+    
     protected abstract void setConstraints();   
     
     public String getSolution() {
@@ -75,7 +83,7 @@ public abstract class ChessProblem {
         
         //Add pieces to board
         for (Piece piece : _chessPieces) {
-            board[piece.getXCoordinate().getValue()][piece.getYCoordinate().getValue()] = piece.getTypeName();
+            board[piece.getXCoordinate().getValue()][piece.getYCoordinate().getValue()] = piece.getName();
         }
         
         //Create string from board

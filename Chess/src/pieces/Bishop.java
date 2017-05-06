@@ -14,6 +14,11 @@ public class Bishop extends Piece {
     }
     
     @Override
+    public String getName() {
+        return "B";
+    }
+    
+    @Override
     public ReExpression menaces(Piece other) {
         return _xCoordinate.dist(other.getXCoordinate()).eq(_yCoordinate.dist(other.getYCoordinate()));
     }
