@@ -59,10 +59,25 @@ public abstract class ChessProblem {
             return "pas de solution";
         }
         
-        ChessBoard board = new ChessBoard(_boardSize);
-        for (Piece piece : _chessPieces) {
-            board.addPiece(piece.getTypeName(), piece.getXCoordinate().getValue(), piece.getYCoordinate().getValue());
+        //Create empty board representation
+        String[][] board = new String[_boardSize][_boardSize];
+        for (int i=0; i<_boardSize; i++) {
+            for (int j=0; j<_boardSize; j++) {
+                board[i][j] = "*";
+            }
         }
-        return board.toString();
+        
+        //Add pieces to board
+        for (Piece piece : _chessPieces) {
+            board[piece.getXCoordinate().getValue()][piece.getYCoordinate().getValue()] = piece.getTypeName();
+        }
+        
+        //Create string from board
+        String result = "";
+        for (String[] boardLine : board) {
+            result += String.join(" ", boardLine);
+            result += "\n";
+        }
+        return result;
     }
 }
