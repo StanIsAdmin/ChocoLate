@@ -22,8 +22,8 @@ public abstract class Piece {
     }
     
     public void setCoordinatesDomain(int boardSize) {
-        _xCoordinate = _solverModel.intVar(_name + "_x", 1, boardSize);
-        _yCoordinate = _solverModel.intVar(_name + "_y", 1, boardSize);
+        _xCoordinate = _solverModel.intVar(_name + "_x", 0, boardSize-1);
+        _yCoordinate = _solverModel.intVar(_name + "_y", 0, boardSize-1);
     }
     
     public IntVar getXCoordinate() {
@@ -32,6 +32,10 @@ public abstract class Piece {
     
     public IntVar getYCoordinate() {
         return _yCoordinate;
+    }
+    
+    public String getTypeName() {
+        return _name.substring(0, 1);
     }
     
     public abstract void addDoesNotMenaceConstraint(Piece other);

@@ -6,7 +6,7 @@ public class Main {
     */
     public static void main(String[] args) {
         Independence ind = new Independence(3,1,1,1);
-        ind.solve();
+        System.out.println(ind.getSolution().toString());
     }
     
 }

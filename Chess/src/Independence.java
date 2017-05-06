@@ -18,10 +18,17 @@ public class Independence {
     /*The chess pieces on the board game*/
     private List<Piece> _chessPieces;
     
-    public Independence(int n, int k1, int k2, int k3) {
-        _boardSize = n;
+    /**
+     * Creates an independence chess problem.
+     * @param boardSize the size of the chess board
+     * @param rooks the number of rooks on the chess board
+     * @param bishops the number of bishops on the chess board
+     * @param knights the number of knights on the chess board
+     */
+    public Independence(int boardSize, int rooks, int bishops, int knights) {
+        _boardSize = boardSize;
         initSolverModel();
-        initChessPieces(k1, k2, k3);
+        initChessPieces(rooks, bishops, knights);
         setConstraints();
     }
         
@@ -61,8 +68,12 @@ public class Independence {
         }
     }   
     
-    public void solve() {
-        List<Solution> solution = _solverModel.getSolver().findAllSolutions();
-        System.out.println(solution.toString());
+    public ChessBoard getSolution() {
+        Solution solution = _solverModel.getSolver().findSolution();
+        ChessBoard board = new ChessBoard(_boardSize);
+        for (Piece piece : _chessPieces) {
+            board.addPiece(piece.getTypeName(), piece.getXCoordinate().getValue(), piece.getYCoordinate().getValue());
+        }
+        return board;
     }
 }
