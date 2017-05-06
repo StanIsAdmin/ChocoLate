@@ -18,6 +18,7 @@ import pieces.Position;
 public abstract class ChessProblem {
     /*The chocosolver model that allows us to solve the problem.*/
     protected Model _solverModel;
+    private Solution _solution;
     
     /*The size of the chess board*/
     protected int _boardSize;
@@ -77,11 +78,18 @@ public abstract class ChessProblem {
                 }
             }
         }
-    }  
+    }
     
-    public String getSolution() {
-        Solution solution = _solverModel.getSolver().findSolution();
-        if (solution == null) {
+    public void solve() {
+        _solution = _solverModel.getSolver().findSolution();
+    }
+    
+    public boolean hasSolution() {
+        return _solution != null;
+    }
+    
+    public String getSolutionAsString() {
+        if (! hasSolution()) {
             return "pas de solution";
         }
         
