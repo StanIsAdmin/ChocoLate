@@ -11,8 +11,8 @@ import org.chocosolver.solver.expression.discrete.relational.ReExpression;
  */
 public class Knight extends Piece {
     
-    public Knight(String name, Model solverModel, int boardSize) {
-        super(name, solverModel, boardSize);
+    public Knight(Model solverModel, int boardSize) {
+        super(solverModel, boardSize);
     }
     
     @Override
@@ -21,8 +21,8 @@ public class Knight extends Piece {
     }
     
     @Override
-    public ReExpression menaces(Piece other) {
-        return _xCoordinate.dist(other.getXCoordinate()).eq(2).and(_yCoordinate.dist(other.getYCoordinate()).eq(1)).or(
-            _xCoordinate.dist(other.getXCoordinate()).eq(1).and(_yCoordinate.dist(other.getYCoordinate()).eq(2)));
+    public ReExpression menaces(Positioned other) {
+        return getX().dist(other.getX()).eq(2).and(getY().dist(other.getY()).eq(1)).or(
+            getX().dist(other.getX()).eq(1).and(getY().dist(other.getY()).eq(2)));
     }
 }

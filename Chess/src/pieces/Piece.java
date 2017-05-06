@@ -7,28 +7,30 @@ import org.chocosolver.solver.variables.IntVar;
 /**
  * Represents a chess game piece, with a name and a board position (x, y).
  */
-public abstract class Piece {
+public abstract class Piece implements Positioned {
     protected IntVar _xCoordinate;
     protected IntVar _yCoordinate;
 
-    public Piece(String name, Model solverModel, int boardSize) {
+    public Piece(Model solverModel, int boardSize) {
         _xCoordinate = solverModel.intVar(0, boardSize-1);
         _yCoordinate = solverModel.intVar(0, boardSize-1);
     }
     
-    public IntVar getXCoordinate() {
+    public abstract String getName();
+    
+    @Override
+    public IntVar getX() {
         return _xCoordinate;
     }
     
-    public IntVar getYCoordinate() {
+    @Override
+    public IntVar getY() {
         return _yCoordinate;
     }
     
-    public abstract String getName();
-    
-    public ReExpression hasSamePosition(Piece other) {
-        return _xCoordinate.eq(other._xCoordinate).and(_yCoordinate.eq(other._yCoordinate));
+    public ReExpression hasSamePosition(Positioned other) {
+        return getX().eq(other.getX()).and(getY().eq(other.getY()));
     }
     
-    public abstract ReExpression menaces(Piece other);
+    public abstract ReExpression menaces(Positioned other);
 }

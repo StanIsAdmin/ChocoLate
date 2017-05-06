@@ -9,8 +9,8 @@ import org.chocosolver.solver.expression.discrete.relational.ReExpression;
  */
 public class Bishop extends Piece {
     
-    public Bishop(String name, Model solverModel, int boardSize) {
-        super(name, solverModel, boardSize);
+    public Bishop(Model solverModel, int boardSize) {
+        super(solverModel, boardSize);
     }
     
     @Override
@@ -19,7 +19,7 @@ public class Bishop extends Piece {
     }
     
     @Override
-    public ReExpression menaces(Piece other) {
-        return _xCoordinate.dist(other.getXCoordinate()).eq(_yCoordinate.dist(other.getYCoordinate()));
+    public ReExpression menaces(Positioned other) {
+        return getX().dist(other.getX()).eq(getY().dist(other.getY()));
     }
 }

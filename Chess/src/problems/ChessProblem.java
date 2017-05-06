@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 import org.chocosolver.solver.Model;
 import org.chocosolver.solver.Solution;
+import pieces.Position;
 
 
 /**
@@ -22,10 +23,10 @@ public abstract class ChessProblem {
     protected int _boardSize;
     
     /*The chess pieces on the board game*/
-    protected List<Piece> _chessPieces;
+    protected List<Piece> _chessPieces = new ArrayList();
     
     /*The board positions*/
-    protected List<Piece> _boardPositions;
+    protected List<Position> _boardPositions = new ArrayList();
     
     /**
      * Creates an abstract chess problem.
@@ -49,20 +50,23 @@ public abstract class ChessProblem {
      * @param knights the number of knights to create
      */
     private void initChessPieces(int rooks, int bishops, int knights) {
-        _chessPieces = new ArrayList<>();
         for (int i=0; i<rooks; i++) {
-            _chessPieces.add(new Rook("R" + i, _solverModel, _boardSize));
+            _chessPieces.add(new Rook(_solverModel, _boardSize));
         }
         for (int i=0; i<bishops; i++) {
-            _chessPieces.add(new Bishop("B" + i, _solverModel, _boardSize));
+            _chessPieces.add(new Bishop(_solverModel, _boardSize));
         }
         for (int i=0; i<knights; i++) {
-            _chessPieces.add(new Knight("K" + i, _solverModel, _boardSize));
+            _chessPieces.add(new Knight(_solverModel, _boardSize));
         }
     }
     
     private void initBoardPositions() {
-        
+        for (int i=0; i<_boardSize; i++) {
+            for (int j=0; j<_boardSize; j++) {
+                _boardPositions.add(new Position(_solverModel, i, j));
+            }
+        }
     }
     
     protected abstract void setConstraints();   
@@ -83,7 +87,7 @@ public abstract class ChessProblem {
         
         //Add pieces to board
         for (Piece piece : _chessPieces) {
-            board[piece.getXCoordinate().getValue()][piece.getYCoordinate().getValue()] = piece.getName();
+            board[piece.getX().getValue()][piece.getY().getValue()] = piece.getName();
         }
         
         //Create string from board
