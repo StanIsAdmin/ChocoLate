@@ -1,3 +1,5 @@
+package pieces;
+
 
 
 import org.chocosolver.solver.Model;

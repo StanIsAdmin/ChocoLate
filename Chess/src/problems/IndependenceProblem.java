@@ -1,3 +1,8 @@
+package problems;
+
+
+import pieces.Piece;
+
 
 /**
  * Represents an independence chess problem.

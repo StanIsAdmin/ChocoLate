@@ -1,4 +1,10 @@
+package problems;
 
+
+import pieces.Rook;
+import pieces.Bishop;
+import pieces.Knight;
+import pieces.Piece;
 import java.util.ArrayList;
 import java.util.List;
 import org.chocosolver.solver.Model;
