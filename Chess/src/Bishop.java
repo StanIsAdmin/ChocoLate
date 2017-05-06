@@ -1,4 +1,4 @@
-package independence;
+
 
 import org.chocosolver.solver.Model;
 

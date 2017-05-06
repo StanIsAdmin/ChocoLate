@@ -1,4 +1,4 @@
-package independence;
+
 
 public class Main {
     /**
