@@ -3,6 +3,7 @@ package pieces;
 
 
 import org.chocosolver.solver.Model;
+import org.chocosolver.solver.expression.discrete.relational.ReExpression;
 
 /**
  * Represents a knight piece of a chess game.
@@ -15,8 +16,8 @@ public class Knight extends Piece {
     }
     
     @Override
-    public void addDoesNotMenaceConstraint(Piece other) {
-        _xCoordinate.dist(other.getXCoordinate()).eq(2).and(_yCoordinate.dist(other.getYCoordinate()).eq(1)).not().post();
-        _xCoordinate.dist(other.getXCoordinate()).eq(1).and(_yCoordinate.dist(other.getYCoordinate()).eq(2)).not().post();
+    public ReExpression menaces(Piece other) {
+        return _xCoordinate.dist(other.getXCoordinate()).eq(2).and(_yCoordinate.dist(other.getYCoordinate()).eq(1)).or(
+            _xCoordinate.dist(other.getXCoordinate()).eq(1).and(_yCoordinate.dist(other.getYCoordinate()).eq(2)));
     }
 }

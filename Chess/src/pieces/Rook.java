@@ -1,8 +1,7 @@
 package pieces;
 
-
-
 import org.chocosolver.solver.Model;
+import org.chocosolver.solver.expression.discrete.relational.ReExpression;
 
 /**
  * Represents a rook piece of a chess game.
@@ -15,8 +14,8 @@ public class Rook extends Piece {
     }
 
     @Override
-    public void addDoesNotMenaceConstraint(Piece other) {
-        _xCoordinate.ne(other.getXCoordinate()).post();
-        _yCoordinate.ne(other.getYCoordinate()).post();
+    public ReExpression menaces(Piece other) {
+        return _xCoordinate.eq(other.getXCoordinate()).or(
+            _yCoordinate.eq(other.getYCoordinate()));
     }
 }

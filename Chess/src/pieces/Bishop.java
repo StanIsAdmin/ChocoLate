@@ -1,8 +1,7 @@
 package pieces;
 
-
-
 import org.chocosolver.solver.Model;
+import org.chocosolver.solver.expression.discrete.relational.ReExpression;
 
 /**
  * Represents a bishop piece of a chess game.
@@ -15,7 +14,7 @@ public class Bishop extends Piece {
     }
     
     @Override
-    public void addDoesNotMenaceConstraint(Piece other) {
-        _xCoordinate.dist(other.getXCoordinate()).ne(_yCoordinate.dist(other.getYCoordinate())).post();
+    public ReExpression menaces(Piece other) {
+        return _xCoordinate.dist(other.getXCoordinate()).eq(_yCoordinate.dist(other.getYCoordinate()));
     }
 }

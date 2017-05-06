@@ -1,8 +1,7 @@
 package pieces;
 
-
-
 import org.chocosolver.solver.Model;
+import org.chocosolver.solver.expression.discrete.relational.ReExpression;
 import org.chocosolver.solver.variables.IntVar;
 
 /**
@@ -40,9 +39,9 @@ public abstract class Piece {
         return _name.substring(0, 1);
     }
     
-    public void addNotInSamePlaceConstraint(Piece other) {
-        _xCoordinate.eq(other._xCoordinate).and(_yCoordinate.eq(other._yCoordinate)).not().post();
+    public ReExpression hasSamePosition(Piece other) {
+        return _xCoordinate.eq(other._xCoordinate).and(_yCoordinate.eq(other._yCoordinate));
     }
     
-    public abstract void addDoesNotMenaceConstraint(Piece other);
+    public abstract ReExpression menaces(Piece other);
 }
