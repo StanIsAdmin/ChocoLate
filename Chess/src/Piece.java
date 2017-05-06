@@ -38,5 +38,9 @@ public abstract class Piece {
         return _name.substring(0, 1);
     }
     
+    public void addNotInSamePlaceConstraint(Piece other) {
+        _xCoordinate.eq(other._xCoordinate).and(_yCoordinate.eq(other._yCoordinate)).not().post();
+    }
+    
     public abstract void addDoesNotMenaceConstraint(Piece other);
 }

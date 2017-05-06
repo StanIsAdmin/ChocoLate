@@ -21,11 +21,11 @@ public class ChessBoard {
         for (String[] boardLine : _board) {
             for (String boardPiece : boardLine) {
                 if (boardPiece == null) {
-                    result += " ";
+                    result += "*";
                 } else {
                     result += boardPiece;
                 }
-                result += " | ";
+                result += " ";
             }
             result += "\n";
         }

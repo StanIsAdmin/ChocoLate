@@ -62,18 +62,23 @@ public class Independence {
         for (Piece pieceA : _chessPieces) {
             for (Piece pieceB : _chessPieces) {
                 if (pieceA != pieceB) {
+                    pieceA.addNotInSamePlaceConstraint(pieceB);
                     pieceA.addDoesNotMenaceConstraint(pieceB);
                 }
             }
         }
     }   
     
-    public ChessBoard getSolution() {
+    public String getSolution() {
         Solution solution = _solverModel.getSolver().findSolution();
+        if (solution == null) {
+            return "pas de solution";
+        }
+        
         ChessBoard board = new ChessBoard(_boardSize);
         for (Piece piece : _chessPieces) {
             board.addPiece(piece.getTypeName(), piece.getXCoordinate().getValue(), piece.getYCoordinate().getValue());
         }
-        return board;
+        return board.toString();
     }
 }
