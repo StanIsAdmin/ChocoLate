@@ -9,6 +9,11 @@ public class ChessBoard {
     public ChessBoard(int size) {
         this._size = size;
         _board = new String[_size][_size];
+        for (int i=0; i<_size; i++) {
+            for (int j=0; j<_size; j++) {
+                _board[i][j] = "*";
+            }
+        }
     }
     
     public void addPiece(String pieceName, int xCoordinate, int yCoordinate) {
@@ -19,14 +24,7 @@ public class ChessBoard {
     public String toString() {
         String result = "";
         for (String[] boardLine : _board) {
-            for (String boardPiece : boardLine) {
-                if (boardPiece == null) {
-                    result += "*";
-                } else {
-                    result += boardPiece;
-                }
-                result += " ";
-            }
+            result += String.join(" ", boardLine);
             result += "\n";
         }
         return result;
