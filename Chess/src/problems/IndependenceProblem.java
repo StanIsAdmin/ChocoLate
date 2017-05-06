@@ -15,10 +15,10 @@ public class IndependenceProblem extends ChessProblem {
     
     @Override
     protected void setConstraints() {
+        super.setConstraints();
         for (Piece pieceA : _chessPieces) {
             for (Piece pieceB : _chessPieces) {
                 if (pieceA != pieceB) {
-                    pieceA.hasSamePosition(pieceB).not().post();
                     pieceA.menaces(pieceB).not().post();
                 }
             }

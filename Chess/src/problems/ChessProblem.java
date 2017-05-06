@@ -69,7 +69,15 @@ public abstract class ChessProblem {
         }
     }
     
-    protected abstract void setConstraints();   
+    protected void setConstraints() {
+        for (Piece pieceA : _chessPieces) {
+            for (Piece pieceB : _chessPieces) {
+                if (pieceA != pieceB) {
+                    pieceA.hasSamePosition(pieceB).not().post();
+                }
+            }
+        }
+    }  
     
     public String getSolution() {
         Solution solution = _solverModel.getSolver().findSolution();

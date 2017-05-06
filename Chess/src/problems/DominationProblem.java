@@ -16,6 +16,7 @@ public class DominationProblem extends ChessProblem {
     
     @Override
     protected void setConstraints() {
+        super.setConstraints();
         for (Position position : _boardPositions) {
             ArrayList<Constraint> allMenaces = new ArrayList<>();
             for (Piece piece : _chessPieces) {
