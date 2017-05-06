@@ -1,7 +1,6 @@
 package pieces;
 
 
-import java.util.ArrayList;
 import java.util.List;
 import org.chocosolver.solver.Model;
 import org.chocosolver.solver.expression.discrete.relational.ReExpression;
@@ -36,14 +35,28 @@ public abstract class Piece implements Positioned {
         return getX().eq(other.getX()).and(getY().eq(other.getY()));
     }
     
+    /**
+     * Detects when target is menaced by this, without collision detection.
+     * @param target the Positioned item to check
+     * @return ReExpression that is true when this menaces target
+     */
     public abstract ReExpression menaces(Positioned target);
     
+    /**
+     * Same as previous, but with collision detection
+     * @param target the Positioned item to check
+     * @param others the Pieces that may be blocking the target
+     * @return ReExpression that is true when this menaces target, without
+     * any piece from others in the way.
+     */
     public ReExpression menaces(Positioned target, List<Piece> others) {
-        ArrayList<ReExpression> anyBlocks = new ArrayList();
+        ReExpression[] notBlocked = new ReExpression[others.size()];
+        int i = 0;
         for (Piece other : others) {
-            anyBlocks.add(isBlocked(target, other).not());
+            notBlocked[i] = isBlocked(target, other).not();
+            i++;
         }
-        return menaces(target).and(anyBlocks.toArray(new ReExpression[anyBlocks.size()]));
+        return menaces(target).and(notBlocked);
     }
     
     private ReExpression isBlocked(Positioned target, Piece other) {
