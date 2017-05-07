@@ -7,7 +7,7 @@ import pieces.Piece;
 /**
  * Represents an independence chess problem.
  */
-public class IndependenceProblem extends ChessProblem {
+public class IndependenceProblem extends CoverageProblem {
     
     public IndependenceProblem(int boardSize, int rooks, int bishops, int knights) {
         super(boardSize, rooks, bishops, knights);

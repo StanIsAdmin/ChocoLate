@@ -10,7 +10,7 @@ import pieces.Piece;
 /**
  * Represents a chess domination problem.
  */
-public class DominationProblem extends ChessProblem {
+public class DominationProblem extends CoverageProblem {
 
     public DominationProblem(int boardSize, int rooks, int bishops, int knights) {
         super(boardSize, rooks, bishops, knights);

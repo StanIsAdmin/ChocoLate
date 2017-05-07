@@ -13,9 +13,11 @@ import pieces.Position;
 
 
 /**
- * Represents an abstract chess problem.
+ * Represents an abstract coverage problem.
+ * A coverage problem aims at covering a set of positions or "board" with
+ * pieces of different types, while respecting certain constraints.
  */
-public abstract class ChessProblem {
+public abstract class CoverageProblem {
     /*The chocosolver model that allows us to solve the problem.*/
     protected Model _solverModel;
     private Solution _solution;
@@ -36,7 +38,7 @@ public abstract class ChessProblem {
      * @param bishops the number of bishops on the chess board
      * @param knights the number of knights on the chess board
      */
-    public ChessProblem(int boardSize, int rooks, int bishops, int knights) {
+    public CoverageProblem(int boardSize, int rooks, int bishops, int knights) {
         _boardSize = boardSize;
         _solverModel = new Model();
         initChessPieces(rooks, bishops, knights);
