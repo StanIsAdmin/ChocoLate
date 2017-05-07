@@ -17,7 +17,7 @@ public class Rook extends Piece {
     
     @Override
     public String getName() {
-        return "R";
+        return "T";
     }
 
     @Override

@@ -17,7 +17,7 @@ public class Bishop extends Piece {
     
     @Override
     public String getName() {
-        return "B";
+        return "F";
     }
     
     @Override

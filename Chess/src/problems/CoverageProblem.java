@@ -47,7 +47,7 @@ public abstract class CoverageProblem {
     }
     
     /**
-     * Initializes the board's chess pieces.
+     * Initializes the board's pieces.
      * @param rooks the number of rooks to create
      * @param bishops the number of bishops to create
      * @param knights the number of knights to create

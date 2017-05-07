@@ -23,8 +23,11 @@ public class Main {
     
     //parsed arguments
     static boolean independence, domination, surveillance;
+    static String independenceOpt="i", dominationOpt="d", surveillanceOpt="s";
     static boolean minimize;
+    static String minimizeOpt="m";
     static int boardSize, rooks, bishops, knights;
+    static String boardSizeOpt="n", rooksOpt="t", bishopsOpt="f", knightsOpt="c";
     
     static class OptionComparator<T extends Option> implements Comparator<T> {
         private final List<String> OPTS_ORDER; //order of options
@@ -49,21 +52,22 @@ public class Main {
     }
     
     private static void initOptions() {
-        options.addOption("d", false, "solve a domination problem");
-        options.addOption("i", false, "solve an independence problem");
-        options.addOption("s", false, "solve a surveillance problem");
-        addPieceOption("n", "size", "size of the board (default is 8)");
-        addPieceOption("t", "rooks", "number of rooks (default is 0)");
-        addPieceOption("f", "bishops", "number of bishops (default is 0)");
-        addPieceOption("c", "knights", "number of knights (default is 0)");
-        options.addOption("m", "minimize", false,
+        options.addOption(dominationOpt, false, "solve a domination problem");
+        options.addOption(independenceOpt, false, "solve an independence problem");
+        options.addOption(surveillanceOpt, false, "solve a surveillance problem");
+        addPieceOption(boardSizeOpt, "size", "size of the board (default is 8)");
+        addPieceOption(rooksOpt, "rooks", "number of rooks (default is 0)");
+        addPieceOption(bishopsOpt, "bishops", "number of bishops (default is 0)");
+        addPieceOption(knightsOpt, "knights", "number of knights (default is 0)");
+        options.addOption(minimizeOpt, "minimize", false,
                 "minimize the total number of pieces\n"
                 + " - numbers of pieces are used as maximums\n"
                 + " - default values become number of board squares"
         );
         
         List<String> optionsOrder = Arrays.asList(
-                "d", "i", "s", "n", "t", "f", "c", "m"
+                dominationOpt, independenceOpt, surveillanceOpt, boardSizeOpt,
+                rooksOpt, bishopsOpt, knightsOpt, minimizeOpt
         );
         formatter.setOptionComparator(new OptionComparator(optionsOrder));
     }
@@ -75,6 +79,24 @@ public class Main {
         );
     }
     
+    private static void parseArgs(String[] args) {
+        try {
+            cmd = parser.parse(options, args);
+        } catch (ParseException e) {
+            System.out.println(e.getMessage());
+            quit();
+        }
+        independence = cmd.hasOption(independenceOpt);
+        domination = cmd.hasOption(dominationOpt);
+        surveillance = cmd.hasOption(surveillanceOpt);
+        minimize = cmd.hasOption(minimizeOpt);
+        boardSize = getPieceOption(boardSizeOpt, 8);
+        int defaultPieceCount = minimize ? boardSize*boardSize : 0;
+        rooks = getPieceOption(rooksOpt, defaultPieceCount);
+        bishops = getPieceOption(bishopsOpt, defaultPieceCount);
+        knights = getPieceOption(knightsOpt, defaultPieceCount);
+    }
+        
     private static int getPieceOption(String optionName, int defaultValue) {
         int result = defaultValue;
         if (cmd.hasOption(optionName)) {
@@ -86,24 +108,6 @@ public class Main {
             }
         }
         return result;
-    }
-    
-    private static void parseArgs(String[] args) {
-        try {
-            cmd = parser.parse(options, args);
-        } catch (ParseException e) {
-            System.out.println(e.getMessage());
-            quit();
-        }
-        independence = cmd.hasOption("i");
-        domination = cmd.hasOption("d");
-        surveillance = cmd.hasOption("s");
-        minimize = cmd.hasOption("min");
-        boardSize = getPieceOption("n", 8);
-        int defaultPieceCount = minimize ? boardSize*boardSize : 0;
-        rooks = getPieceOption("t", defaultPieceCount);
-        bishops = getPieceOption("f", defaultPieceCount);
-        knights = getPieceOption("c", defaultPieceCount);
     }
     
     private static void start() {
