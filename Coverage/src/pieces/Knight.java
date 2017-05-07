@@ -1,7 +1,6 @@
 package pieces;
 
 
-import org.chocosolver.solver.Model;
 import org.chocosolver.solver.expression.discrete.relational.ReExpression;
 
 
@@ -10,10 +9,6 @@ import org.chocosolver.solver.expression.discrete.relational.ReExpression;
  * @extends Piece
  */
 public class Knight extends Piece {
-    
-    public Knight(Model solverModel, int boardSize) {
-        super(solverModel, boardSize);
-    }
     
     @Override
     public String getName() {

@@ -2,7 +2,6 @@ package pieces;
 
 
 import java.util.List;
-import org.chocosolver.solver.Model;
 import org.chocosolver.solver.expression.discrete.relational.ReExpression;
 import org.chocosolver.solver.variables.IntVar;
 
@@ -13,10 +12,10 @@ import org.chocosolver.solver.variables.IntVar;
 public abstract class Piece implements Positioned {
     protected IntVar _xCoordinate;
     protected IntVar _yCoordinate;
-
-    public Piece(Model solverModel, int boardSize) {
-        _xCoordinate = solverModel.intVar(0, boardSize-1);
-        _yCoordinate = solverModel.intVar(0, boardSize-1);
+    
+    public void setCoordinates(IntVar xCoordinate, IntVar yCoordinate) {
+        _xCoordinate = xCoordinate;
+        _yCoordinate = yCoordinate;
     }
     
     public abstract String getName();

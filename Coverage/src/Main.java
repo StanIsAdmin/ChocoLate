@@ -7,8 +7,12 @@ import org.apache.commons.cli.DefaultParser;
 import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Option;
 import org.apache.commons.cli.OptionBuilder;
+import org.apache.commons.cli.OptionGroup;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
+import pieces.Bishop;
+import pieces.Knight;
+import pieces.Rook;
 import problems.AbstractCoverageProblem;
 import problems.DominationProblem;
 import problems.IndependenceProblem;
@@ -55,6 +59,12 @@ public class Main {
         options.addOption(dominationOpt, false, "solve a domination problem");
         options.addOption(independenceOpt, false, "solve an independence problem");
         options.addOption(surveillanceOpt, false, "solve a surveillance problem");
+        OptionGroup problemType = new OptionGroup();
+        problemType.setRequired(true);
+        problemType.addOption(options.getOption(dominationOpt));
+        problemType.addOption(options.getOption(independenceOpt));
+        problemType.addOption(options.getOption(surveillanceOpt));
+        
         addPieceOption(boardSizeOpt, "size", "size of the board (default is 8)");
         addPieceOption(rooksOpt, "rooks", "number of rooks (default is 0)");
         addPieceOption(bishopsOpt, "bishops", "number of bishops (default is 0)");
@@ -111,12 +121,13 @@ public class Main {
     }
     
     private static void start() {
+        AbstractCoverageProblem prob;
         if (independence) {
-            IndependenceProblem prob = new IndependenceProblem(boardSize, rooks, bishops, knights);
+            prob = new IndependenceProblem(boardSize);
             solveProblem(prob);
         }
         if (domination) {
-            DominationProblem prob = new DominationProblem(boardSize, rooks, bishops, knights);
+            prob = new DominationProblem(boardSize);
             solveProblem(prob);
         }
         if (surveillance) {
@@ -127,6 +138,15 @@ public class Main {
     private static void solveProblem(AbstractCoverageProblem prob) {
         //TODO
         /*if (minimize) prob.setGoal("minimize");*/
+        for (int i=0; i<rooks; i++) {
+            prob.addPiece(new Rook());
+        }
+        for (int i=0; i<bishops; i++) {
+            prob.addPiece(new Bishop());
+        }
+        for (int i=0; i<knights; i++) {
+            prob.addPiece(new Knight());
+        }
         prob.solve();
         System.out.print(prob.getSolutionAsString());
     }

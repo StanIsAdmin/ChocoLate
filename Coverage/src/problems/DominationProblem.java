@@ -14,8 +14,8 @@ import pieces.Piece;
  */
 public class DominationProblem extends AbstractCoverageProblem {
 
-    public DominationProblem(int boardSize, int rooks, int bishops, int knights) {
-        super(boardSize, rooks, bishops, knights);
+    public DominationProblem(int boardSize) {
+        super(boardSize);
     }
     
     @Override
@@ -23,10 +23,10 @@ public class DominationProblem extends AbstractCoverageProblem {
         super.setConstraints();
         for (Position position : _boardPositions) {
             ArrayList<Constraint> anyMenaces = new ArrayList<>();
-            for (Piece piece : _chessPieces) {
-                anyMenaces.add(piece.menaces(position, _chessPieces).or(piece.occupies(position)).decompose());
+            for (Piece piece : _boardPieces) {
+                anyMenaces.add(piece.menaces(position, _boardPieces).or(piece.occupies(position)).decompose());
             }
-            _solverModel.or(anyMenaces.toArray(new Constraint[anyMenaces.size()])).post();
+            _model.or(anyMenaces.toArray(new Constraint[anyMenaces.size()])).post();
         }
     }
     

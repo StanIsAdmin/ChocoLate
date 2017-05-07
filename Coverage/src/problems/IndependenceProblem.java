@@ -10,16 +10,16 @@ import pieces.Piece;
  * no piece menaces another.
  */
 public class IndependenceProblem extends AbstractCoverageProblem {
-    
-    public IndependenceProblem(int boardSize, int rooks, int bishops, int knights) {
-        super(boardSize, rooks, bishops, knights);
+
+    public IndependenceProblem(int boardSize) {
+        super(boardSize);
     }
     
     @Override
     protected void setConstraints() {
         super.setConstraints();
-        for (Piece pieceA : _chessPieces) {
-            for (Piece pieceB : _chessPieces) {
+        for (Piece pieceA : _boardPieces) {
+            for (Piece pieceB : _boardPieces) {
                 if (pieceA != pieceB) {
                     pieceA.menaces(pieceB).not().post();
                 }
