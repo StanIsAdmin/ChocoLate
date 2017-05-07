@@ -35,6 +35,14 @@ public abstract class AbstractCoverageProblem {
         initBoardPositions();
     }
     
+    private void initBoardPositions() {
+        for (int i=0; i<_boardSize; i++) {
+            for (int j=0; j<_boardSize; j++) {
+                _boardPositions.add(new Position(_model, i, j));
+            }
+        }
+    }
+    
     public Model getModel() {
         return _model;
     }
@@ -44,14 +52,6 @@ public abstract class AbstractCoverageProblem {
         IntVar yCoordinate = _model.intVar(0, _boardSize-1);
         piece.setCoordinates(xCoordinate, yCoordinate);
         _boardPieces.add(piece);
-    }
-    
-    private void initBoardPositions() {
-        for (int i=0; i<_boardSize; i++) {
-            for (int j=0; j<_boardSize; j++) {
-                _boardPositions.add(new Position(_model, i, j));
-            }
-        }
     }
     
     protected void setConstraints() {
