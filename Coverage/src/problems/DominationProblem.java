@@ -24,7 +24,7 @@ public class DominationProblem extends AbstractCoverageProblem {
         for (Position position : _boardPositions) {
             ArrayList<ReExpression> anyMenaces = new ArrayList<>();
             for (Piece piece : _boardPieces) {
-                anyMenaces.add(piece.menaces(position, _boardPieces).or(piece.occupies(position)));
+                anyMenaces.add(piece.isOnBoard().and(piece.menaces(position, _boardPieces).or(piece.occupies(position))));
             }
             anyMenaces.get(0).or(anyMenaces.toArray(new ReExpression[anyMenaces.size()])).post();
         }

@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 import org.chocosolver.solver.Model;
 import org.chocosolver.solver.Solution;
+import org.chocosolver.solver.variables.BoolVar;
 import org.chocosolver.solver.variables.IntVar;
 import pieces.Position;
 
@@ -16,18 +17,17 @@ import pieces.Position;
  * pieces of different types, while respecting certain constraints.
  */
 public abstract class AbstractCoverageProblem {
-    /*The chocosolver model that allows us to solve the problem.*/
+    /*Choco Solver model and its solution*/
     protected Model _model;
     private Solution _solution;
     
-    /*The size of the board*/
+    /*Board positions*/
     protected int _boardSize;
-    
-    /*The pieces on the board*/
-    protected List<Piece> _boardPieces = new ArrayList();
-    
-    /*The board positions*/
     protected List<Position> _boardPositions = new ArrayList();
+    
+    /*Pieces on the board*/
+    private IntVar _boardPiecesCount;
+    protected List<Piece> _boardPieces = new ArrayList();
     
     public AbstractCoverageProblem(int boardSize) {
         _model = new Model();
@@ -42,19 +42,17 @@ public abstract class AbstractCoverageProblem {
             }
         }
     }
-    
-    public Model getModel() {
-        return _model;
-    }
-    
+
     public void addPiece(Piece piece) {
         IntVar xCoordinate = _model.intVar(0, _boardSize-1);
         IntVar yCoordinate = _model.intVar(0, _boardSize-1);
-        piece.setCoordinates(xCoordinate, yCoordinate);
+        BoolVar onBoard = _model.boolVar();
+        piece.setCoordinates(xCoordinate, yCoordinate, onBoard);
         _boardPieces.add(piece);
     }
     
     protected void setConstraints() {
+        //No more than one piece per position
         for (Piece pieceA : _boardPieces) {
             for (Piece pieceB : _boardPieces) {
                 if (pieceA != pieceB) {
@@ -64,9 +62,36 @@ public abstract class AbstractCoverageProblem {
         }
     }
     
+    private void enforceAllPieces() {
+        //All pieces have to be used, _boardPiecesCount is fixed
+        for (Piece piece : _boardPieces) {
+            piece.getOnBoard().eq(1).post();
+        }
+        _boardPiecesCount = _model.intVar(_boardPieces.size()-1);
+    }
+    
+    private void allowLessPieces() {
+        //Pieces may be left unused, _boardPiecesCount is the number of pieces on the board
+        BoolVar[] onBoard = new BoolVar[_boardPieces.size()];
+        int i = 0;
+        for (Piece piece : _boardPieces) {
+            onBoard[i] = piece.getOnBoard();
+            i++;
+        }
+        _boardPiecesCount = _model.intVar(0, _boardPieces.size()-1);
+        _model.sum(onBoard, "=", _boardPiecesCount).post();
+    }
+    
     public void solve() {
         setConstraints();
+        enforceAllPieces();
         _solution = _model.getSolver().findSolution();
+    }
+    
+    public void solveMinimum() {
+        setConstraints();
+        allowLessPieces();
+        _solution = _model.getSolver().findOptimalSolution(_boardPiecesCount, Model.MINIMIZE);
     }
     
     public boolean hasSolution() {

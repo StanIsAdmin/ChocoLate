@@ -21,7 +21,7 @@ public class IndependenceProblem extends AbstractCoverageProblem {
         for (Piece pieceA : _boardPieces) {
             for (Piece pieceB : _boardPieces) {
                 if (pieceA != pieceB) {
-                    pieceA.menaces(pieceB).not().post();
+                    pieceA.isOnBoard().and(pieceA.menaces(pieceB)).not().post();
                 }
             }
         }

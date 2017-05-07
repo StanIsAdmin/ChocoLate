@@ -131,8 +131,7 @@ public class Main {
     }
     
     private static void solveProblem(AbstractCoverageProblem prob) {
-        //TODO
-        /*if (minimize) prob.setGoal("minimize");*/
+        //Add required pieces
         for (int i=0; i<rooks; i++) {
             prob.addPiece(new Rook());
         }
@@ -142,7 +141,13 @@ public class Main {
         for (int i=0; i<knights; i++) {
             prob.addPiece(new Knight());
         }
-        prob.solve();
+        
+        //Solve with objective
+        if (minimize) {
+            prob.solveMinimum();
+        } else {
+            prob.solve();
+        }
         System.out.print(prob.getSolutionAsString());
     }
     
