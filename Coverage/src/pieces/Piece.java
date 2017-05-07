@@ -37,33 +37,33 @@ public abstract class Piece implements Positioned {
     /**
      * Detects when target is menaced by this, without collision detection.
      * @param target the Positioned item to check
-     * @return ReExpression that is true when this menaces target
+     * @return ReExpression that is true when this piece menaces target
      */
     public abstract ReExpression menaces(Positioned target);
     
     /**
      * Same as previous, but with collision detection
      * @param target the Positioned item to check
-     * @param others the Pieces that may be blocking the target
+     * @param obstacles the Pieces that may be blocking the target
      * @return ReExpression that is true when this menaces target, without
      * any piece from others in the way.
      */
-    public ReExpression menaces(Positioned target, List<Piece> others) {
-        ReExpression[] notBlocked = new ReExpression[others.size()];
+    public ReExpression menaces(Positioned target, List<Piece> obstacles) {
+        ReExpression[] notBlocked = new ReExpression[obstacles.size()];
         int i = 0;
-        for (Piece other : others) {
-            notBlocked[i] = isBlocked(target, other).not();
+        for (Piece obstacle : obstacles) {
+            notBlocked[i] = isBlocked(target, obstacle).not();
             i++;
         }
         return menaces(target).and(notBlocked);
     }
     
-    private ReExpression isBlocked(Positioned target, Piece other) {
-        return menaces(other).and(
-            other.getX().lt(getX().max(target.getX())).and(
-            other.getX().gt(getX().min(target.getX()))).and(
-            other.getY().lt(getY().max(target.getY()))).and(
-            other.getY().gt(getY().min(target.getY())))
+    private ReExpression isBlocked(Positioned target, Piece obstacle) {
+        return menaces(obstacle).and(
+            obstacle.getX().lt(getX().max(target.getX())).and(
+            obstacle.getX().gt(getX().min(target.getX()))).and(
+            obstacle.getY().lt(getY().max(target.getY()))).and(
+            obstacle.getY().gt(getY().min(target.getY())))
         );
     }
 }
