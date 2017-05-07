@@ -26,8 +26,8 @@ public class Main {
     private static HelpFormatter formatter = new HelpFormatter();
     
     //parsed arguments
-    static boolean independence, domination, surveillance;
-    static String independenceOpt="i", dominationOpt="d", surveillanceOpt="s";
+    static boolean independence, domination;
+    static String independenceOpt="i", dominationOpt="d";
     static boolean minimize;
     static String minimizeOpt="m";
     static int boardSize, rooks, bishops, knights;
@@ -58,12 +58,11 @@ public class Main {
     private static void initOptions() {
         options.addOption(dominationOpt, false, "solve a domination problem");
         options.addOption(independenceOpt, false, "solve an independence problem");
-        options.addOption(surveillanceOpt, false, "solve a surveillance problem");
         OptionGroup problemType = new OptionGroup();
-        problemType.setRequired(true);
         problemType.addOption(options.getOption(dominationOpt));
         problemType.addOption(options.getOption(independenceOpt));
-        problemType.addOption(options.getOption(surveillanceOpt));
+        problemType.setRequired(true);
+        options.addOptionGroup(problemType);
         
         addPieceOption(boardSizeOpt, "size", "size of the board (default is 8)");
         addPieceOption(rooksOpt, "rooks", "number of rooks (default is 0)");
@@ -76,7 +75,7 @@ public class Main {
         );
         
         List<String> optionsOrder = Arrays.asList(
-                dominationOpt, independenceOpt, surveillanceOpt, boardSizeOpt,
+                dominationOpt, independenceOpt, boardSizeOpt,
                 rooksOpt, bishopsOpt, knightsOpt, minimizeOpt
         );
         formatter.setOptionComparator(new OptionComparator(optionsOrder));
@@ -98,7 +97,6 @@ public class Main {
         }
         independence = cmd.hasOption(independenceOpt);
         domination = cmd.hasOption(dominationOpt);
-        surveillance = cmd.hasOption(surveillanceOpt);
         minimize = cmd.hasOption(minimizeOpt);
         boardSize = getPieceOption(boardSizeOpt, 8);
         int defaultPieceCount = minimize ? boardSize*boardSize : 0;
@@ -129,9 +127,6 @@ public class Main {
         if (domination) {
             prob = new DominationProblem(boardSize);
             solveProblem(prob);
-        }
-        if (surveillance) {
-            //TODO
         }
     }
     
