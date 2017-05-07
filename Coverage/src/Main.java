@@ -148,7 +148,7 @@ public class Main {
         } else {
             prob.solve();
         }
-        System.out.print(prob.getSolutionAsString());
+        System.out.print(prob.getSolutionAsString().replace("-", "*"));
     }
     
     private static void quit() {

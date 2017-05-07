@@ -5,7 +5,6 @@ import pieces.Piece;
 import java.util.ArrayList;
 import java.util.List;
 import org.chocosolver.solver.Model;
-import org.chocosolver.solver.Solution;
 import org.chocosolver.solver.variables.BoolVar;
 import org.chocosolver.solver.variables.IntVar;
 import pieces.Position;
@@ -19,7 +18,7 @@ import pieces.Position;
 public abstract class AbstractCoverageProblem {
     /*Choco Solver model and its solution*/
     protected Model _model;
-    private Solution _solution;
+    private boolean _solved;
     
     /*Board positions*/
     protected int _boardSize;
@@ -70,7 +69,7 @@ public abstract class AbstractCoverageProblem {
         _boardPiecesCount = _model.intVar(_boardPieces.size()-1);
     }
     
-    private void allowLessPieces() {
+    private void enforceMinimumPieces() {
         //Pieces may be left unused, _boardPiecesCount is the number of pieces on the board
         BoolVar[] onBoard = new BoolVar[_boardPieces.size()];
         int i = 0;
@@ -78,36 +77,43 @@ public abstract class AbstractCoverageProblem {
             onBoard[i] = piece.getOnBoard();
             i++;
         }
-        _boardPiecesCount = _model.intVar(0, _boardPieces.size()-1);
+        _boardPiecesCount = _model.intVar(0, _boardPieces.size());
         _model.sum(onBoard, "=", _boardPiecesCount).post();
+        _model.setObjective(Model.MINIMIZE, _boardPiecesCount);
     }
     
     public void solve() {
         setConstraints();
         enforceAllPieces();
-        _solution = _model.getSolver().findSolution();
+        _solved = _model.getSolver().solve();
     }
     
     public void solveMinimum() {
         setConstraints();
-        allowLessPieces();
-        _solution = _model.getSolver().findOptimalSolution(_boardPiecesCount, Model.MINIMIZE);
+        enforceMinimumPieces();
+        _solved = false;
+        while (_model.getSolver().solve()) {
+            _solved = true;
+        }
     }
     
     public boolean hasSolution() {
-        return _solution != null;
+        return _solved;
     }
     
     public String getSolutionAsString() {
         if (! hasSolution()) {
-            return "pas de solution";
+            return "pas de solution\n";
         }
+        
+        String voidChar = "-";
+        String separatorChar = " ";
         
         //Create empty board representation
         String[][] board = new String[_boardSize][_boardSize];
         for (int i=0; i<_boardSize; i++) {
             for (int j=0; j<_boardSize; j++) {
-                board[i][j] = "*";
+                board[i][j] = voidChar;
             }
         }
         
@@ -119,7 +125,7 @@ public abstract class AbstractCoverageProblem {
         //Create string from board
         String result = "";
         for (String[] boardLine : board) {
-            result += String.join(" ", boardLine);
+            result += String.join(separatorChar, boardLine);
             result += "\n";
         }
         return result;
