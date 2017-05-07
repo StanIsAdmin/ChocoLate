@@ -17,7 +17,7 @@ import pieces.Position;
  * A coverage problem aims at covering a set of positions or "board" with
  * pieces of different types, while respecting certain constraints.
  */
-public abstract class CoverageProblem {
+public abstract class AbstractCoverageProblem {
     /*The chocosolver model that allows us to solve the problem.*/
     protected Model _solverModel;
     private Solution _solution;
@@ -38,7 +38,7 @@ public abstract class CoverageProblem {
      * @param bishops the number of bishops on the chess board
      * @param knights the number of knights on the chess board
      */
-    public CoverageProblem(int boardSize, int rooks, int bishops, int knights) {
+    public AbstractCoverageProblem(int boardSize, int rooks, int bishops, int knights) {
         _boardSize = boardSize;
         _solverModel = new Model();
         initChessPieces(rooks, bishops, knights);

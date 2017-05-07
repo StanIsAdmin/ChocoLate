@@ -9,7 +9,7 @@ import org.apache.commons.cli.Option;
 import org.apache.commons.cli.OptionBuilder;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
-import problems.CoverageProblem;
+import problems.AbstractCoverageProblem;
 import problems.DominationProblem;
 import problems.IndependenceProblem;
 
@@ -124,7 +124,7 @@ public class Main {
         }
     }
     
-    private static void solveProblem(CoverageProblem prob) {
+    private static void solveProblem(AbstractCoverageProblem prob) {
         //TODO
         /*if (minimize) prob.setGoal("minimize");*/
         prob.solve();

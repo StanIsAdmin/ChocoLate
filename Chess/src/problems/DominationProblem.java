@@ -8,9 +8,11 @@ import pieces.Piece;
 
 
 /**
- * Represents a chess domination problem.
+ * Represents a domination coverage problem.
+ * A domination problem aims at covering the board with pieces so that
+ * all positions of the board are either occupied or menaced by at least one piece.
  */
-public class DominationProblem extends CoverageProblem {
+public class DominationProblem extends AbstractCoverageProblem {
 
     public DominationProblem(int boardSize, int rooks, int bishops, int knights) {
         super(boardSize, rooks, bishops, knights);
