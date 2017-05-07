@@ -30,6 +30,11 @@ public abstract class Piece implements Positioned {
         return _yCoordinate;
     }
     
+    /**
+     * Detects when this piece is in the same positin as other.
+     * @param other the positioned object whose position is compared
+     * @return ReExpression that is true when this and other have same positions
+     */
     public ReExpression occupies(Positioned other) {
         return getX().eq(other.getX()).and(getY().eq(other.getY()));
     }
@@ -46,7 +51,7 @@ public abstract class Piece implements Positioned {
      * @param target the Positioned item to check
      * @param obstacles the Pieces that may be blocking the target
      * @return ReExpression that is true when this menaces target, without
-     * any piece from others in the way.
+     * any piece from others in the way
      */
     public ReExpression menaces(Positioned target, List<Piece> obstacles) {
         ReExpression[] notBlocked = new ReExpression[obstacles.size()];
@@ -58,12 +63,18 @@ public abstract class Piece implements Positioned {
         return menaces(target).and(notBlocked);
     }
     
+    /**
+     * Detects when a menaced target is blocked by obstacle.
+     * @param target the target that we are checking
+     * @param obstacle the piece that may be blocking our target
+     * @return ReExpression that is true when obstacle blocks target
+     */
     private ReExpression isBlocked(Positioned target, Piece obstacle) {
-        return menaces(obstacle).and(
+        return menaces(obstacle).and(menaces(target).and(
             obstacle.getX().lt(getX().max(target.getX())).and(
             obstacle.getX().gt(getX().min(target.getX()))).and(
             obstacle.getY().lt(getY().max(target.getY()))).and(
             obstacle.getY().gt(getY().min(target.getY())))
-        );
+        ));
     }
 }
