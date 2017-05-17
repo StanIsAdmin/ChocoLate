@@ -11,8 +11,8 @@ import org.chocosolver.solver.variables.IntVar;
  * Represents a chess game piece, with a name and a board position (x, y).
  */
 public abstract class Piece implements Positioned {
-    protected IntVar _xCoordinate;
-    protected IntVar _yCoordinate;
+    private IntVar _xCoordinate;
+    private IntVar _yCoordinate;
     private BoolVar _onBoard;
     
     public void setCoordinates(IntVar xCoordinate, IntVar yCoordinate, BoolVar onBoard) {
@@ -33,17 +33,19 @@ public abstract class Piece implements Positioned {
         return _yCoordinate;
     }
     
-    public BoolVar getOnBoard() {
-        return _onBoard;
-    }
-    
+    /**
+     * Detects when this piece is on the board.
+     * A piece that's not on the board does not menace nor is menaced by
+     * other pieces.
+     * @return ReExpression that is true when the piece is on the board
+     */
     public ReExpression isOnBoard() {
         return _onBoard.eq(1);
     }
     
     /**
-     * Detects when this piece is in the same positin as other.
-     * @param other the positioned object whose position is compared
+     * Detects when this piece is in the same (x, y) position as other.
+     * @param other the positioned object whose position is compared to this
      * @return ReExpression that is true when this and other have same positions
      */
     public ReExpression occupies(Positioned other) {
@@ -81,11 +83,12 @@ public abstract class Piece implements Positioned {
      * @return ReExpression that is true when obstacle blocks target
      */
     private ReExpression isBlocked(Positioned target, Piece obstacle) {
-        return menaces(obstacle).and(menaces(target).and(
-            obstacle.getX().lt(getX().max(target.getX())).and(
-            obstacle.getX().gt(getX().min(target.getX()))).and(
-            obstacle.getY().lt(getY().max(target.getY()))).and(
-            obstacle.getY().gt(getY().min(target.getY())))
-        ));
+        return menaces(obstacle)
+            .and(menaces(target))
+            .and(obstacle.occupies(target).not())
+            .and(obstacle.getX().le(getX().max(target.getX())))
+            .and(obstacle.getX().ge(getX().min(target.getX())))
+            .and(obstacle.getY().le(getY().max(target.getY())))
+            .and(obstacle.getY().ge(getY().min(target.getY())));
     }
 }

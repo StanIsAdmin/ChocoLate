@@ -1,7 +1,6 @@
 package problems;
 
 
-import java.util.ArrayList;
 import org.chocosolver.solver.expression.discrete.relational.ReExpression;
 import pieces.Position;
 import pieces.Piece;
@@ -22,11 +21,13 @@ public class DominationProblem extends AbstractCoverageProblem {
     protected void setConstraints() {
         super.setConstraints();
         for (Position position : _boardPositions) {
-            ArrayList<ReExpression> anyMenaces = new ArrayList<>();
+            ReExpression[] anyMenaces = new ReExpression[_boardPieces.size()];
+            int i=0;
             for (Piece piece : _boardPieces) {
-                anyMenaces.add(piece.isOnBoard().and(piece.menaces(position, _boardPieces).or(piece.occupies(position))));
+                anyMenaces[i] = piece.menaces(position, _boardPieces).or(piece.occupies(position));
+                i++;
             }
-            anyMenaces.get(0).or(anyMenaces.toArray(new ReExpression[anyMenaces.size()])).post();
+            anyMenaces[0].or(anyMenaces).post();
         }
     }
     
