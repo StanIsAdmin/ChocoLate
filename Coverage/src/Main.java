@@ -22,12 +22,13 @@ public class Main {
     
     private static void start() {
         AbstractCoverageProblem prob;
-        int boardSize = _parser.getBoardSize();
+        int boardSizeX = _parser.getBoardSizeX();
+        int boardSizeY = _parser.getBoardSizeY();
         
         if (_parser.problemIsDomination()) {
-            prob = new DominationProblem(boardSize);
+            prob = new DominationProblem(boardSizeX, boardSizeY);
         } else {
-            prob = new IndependenceProblem(boardSize);
+            prob = new IndependenceProblem(boardSizeX, boardSizeY);
         }
             
         solveProblem(prob);

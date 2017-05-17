@@ -23,13 +23,14 @@ public class Parser {
     private static final HelpFormatter formatter = new HelpFormatter();
     private CommandLine cmd;
     
-    // parsed arguments
-    static boolean independence, domination;
+    // option identifiers
     static String independenceOpt="i", dominationOpt="d";
-    static boolean minimize;
     static String minimizeOpt="m";
-    static int boardSize, rooks, bishops, knights;
     static String boardSizeOpt="n", rooksOpt="t", bishopsOpt="f", knightsOpt="c";
+    
+    // default values
+    int boardSizeDefault = 8;
+    int pieceCountDefault = 0;
     
     static class OptionComparator<T extends Option> implements Comparator<T> {
         private final List<String> OPTS_ORDER; //order of options
@@ -88,19 +89,6 @@ public class Parser {
             System.out.println(e.getMessage());
             quit();
         }
-        
-        // type of problem
-        independence = cmd.hasOption(independenceOpt);
-        domination = cmd.hasOption(dominationOpt);
-        
-        // objective
-        minimize = cmd.hasOption(minimizeOpt);
-        
-        // board parameters
-        boardSize = getPieceOption(boardSizeOpt, 8);
-        rooks = getPieceOption(rooksOpt, 0);
-        bishops = getPieceOption(bishopsOpt, 0);
-        knights = getPieceOption(knightsOpt, 0);
     }
         
     private int getPieceOption(String optionName, int defaultValue) {
@@ -122,30 +110,34 @@ public class Parser {
     }
     
     public boolean problemIsDomination() {
-        return domination;
+        return cmd.hasOption(dominationOpt);
     }
     
     public boolean problemIsIndependence() {
-        return independence;
+        return cmd.hasOption(independenceOpt);
     }
     
     public boolean objectiveIsMinimize() {
-        return minimize;
+        return cmd.hasOption(minimizeOpt);
     }
     
-    public int getBoardSize() {
-        return boardSize;
+    public int getBoardSizeX() {
+        return getPieceOption(boardSizeOpt, boardSizeDefault);
+    }
+    
+    public int getBoardSizeY() {
+        return getPieceOption(boardSizeOpt, boardSizeDefault);
     }
     
     public int getRookCount() {
-        return rooks;
+        return getPieceOption(rooksOpt, pieceCountDefault);
     }
     
     public int getBishopCount() {
-        return bishops;
+        return getPieceOption(bishopsOpt, pieceCountDefault);
     }
     
     public int getKnightCount() {
-        return knights;
+        return getPieceOption(knightsOpt, pieceCountDefault);
     }
 }

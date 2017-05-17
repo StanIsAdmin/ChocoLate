@@ -22,29 +22,30 @@ public class AbstractCoverageProblem {
     private boolean _solved;
     
     /*Board positions*/
-    protected int _boardSize;
+    protected int _boardSizeX, _boardSizeY;
     protected List<Position> _boardPositions = new ArrayList();
     
     /*Pieces on the board*/
     protected List<Piece> _boardPieces = new ArrayList();
     
-    public AbstractCoverageProblem(int boardSize) {
+    public AbstractCoverageProblem(int boardSizeX, int boardSizeY) {
         _model = new Model();
-        _boardSize = boardSize;
+        _boardSizeX = boardSizeX;
+        _boardSizeY = boardSizeY;
         initBoardPositions();
     }
     
     private void initBoardPositions() {
-        for (int i=0; i<_boardSize; i++) {
-            for (int j=0; j<_boardSize; j++) {
-                _boardPositions.add(new Position(_model, i, j));
+        for (int x=0; x<_boardSizeX; x++) {
+            for (int y=0; y<_boardSizeY; y++) {
+                _boardPositions.add(new Position(_model, x, y));
             }
         }
     }
 
     public void addPiece(Piece piece) {
-        IntVar xCoordinate = _model.intVar(0, _boardSize-1);
-        IntVar yCoordinate = _model.intVar(0, _boardSize-1);
+        IntVar xCoordinate = _model.intVar(0, _boardSizeX-1);
+        IntVar yCoordinate = _model.intVar(0, _boardSizeX-1);
         BoolVar onBoard = _model.boolVar();
         piece.setCoordinates(xCoordinate, yCoordinate, onBoard);
         _boardPieces.add(piece);
@@ -109,10 +110,10 @@ public class AbstractCoverageProblem {
         String separatorChar = " ";
         
         //Create empty board representation
-        String[][] board = new String[_boardSize][_boardSize];
-        for (int i=0; i<_boardSize; i++) {
-            for (int j=0; j<_boardSize; j++) {
-                board[i][j] = voidChar;
+        String[][] board = new String[_boardSizeX][_boardSizeY];
+        for (int x=0; x<_boardSizeX; x++) {
+            for (int y=0; y<_boardSizeY; y++) {
+                board[x][y] = voidChar;
             }
         }
         

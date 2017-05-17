@@ -11,8 +11,8 @@ import pieces.Piece;
  */
 public class IndependenceProblem extends AbstractCoverageProblem {
 
-    public IndependenceProblem(int boardSize) {
-        super(boardSize);
+    public IndependenceProblem(int boardSizeX, int boardSizeY) {
+        super(boardSizeX, boardSizeY);
     }
     
     @Override

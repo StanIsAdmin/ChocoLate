@@ -13,8 +13,8 @@ import pieces.Piece;
  */
 public class DominationProblem extends AbstractCoverageProblem {
 
-    public DominationProblem(int boardSize) {
-        super(boardSize);
+    public DominationProblem(int boardSizeX, int boardSizeY) {
+        super(boardSizeX, boardSizeY);
     }
     
     @Override
