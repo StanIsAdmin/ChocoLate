@@ -58,11 +58,14 @@ public abstract class Piece implements Positioned {
     
     /**
      * Determines whether target is menaced by this.
-     * Does not detect obstacles.
+     * Does not detect obstacles. The default behavior for a Piece
+     * is to menace any position it does not occupy.
      * @param target the Positioned item to check
      * @return ReExpression that is true when this piece menaces target
      */
-    public abstract ReExpression menaces(Positioned target);
+    public ReExpression menaces(Positioned target) {
+        return occupies(target).not();
+    }
     
     /**
      * Determines whether target is menaced by this, while no obstacle blocks it.

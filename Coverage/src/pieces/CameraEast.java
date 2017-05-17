@@ -13,6 +13,7 @@ public class CameraEast extends Piece {
     
     @Override
     public ReExpression menaces(Positioned target) {
-        return getY().eq(target.getY()).and(getX().lt(target.getX()));
+        return super.menaces(target)
+            .and(getY().eq(target.getY()).and(getX().lt(target.getX())));
     }
 }

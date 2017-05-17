@@ -17,6 +17,7 @@ public class Bishop extends Piece {
     
     @Override
     public ReExpression menaces(Positioned target) {
-        return getX().dist(target.getX()).eq(getY().dist(target.getY()));
+        return super.menaces(target)
+            .and(getX().dist(target.getX()).eq(getY().dist(target.getY())));
     }
 }

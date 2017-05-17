@@ -17,6 +17,7 @@ public class Rook extends Piece {
 
     @Override
     public ReExpression menaces(Positioned target) {
-        return getX().eq(target.getX()).or(getY().eq(target.getY()));
+        return super.menaces(target)
+            .and(getX().eq(target.getX()).or(getY().eq(target.getY())));
     }
 }
