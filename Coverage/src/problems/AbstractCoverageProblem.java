@@ -118,7 +118,9 @@ public class AbstractCoverageProblem {
         
         //Add pieces to board
         for (Piece piece : _boardPieces) {
-            board[piece.getX().getValue()][piece.getY().getValue()] = piece.getName();
+            if (piece.getOnBoard().getValue() == 1) {
+                board[piece.getX().getValue()][piece.getY().getValue()] = piece.getName();
+            }
         }
         
         //Create string from board

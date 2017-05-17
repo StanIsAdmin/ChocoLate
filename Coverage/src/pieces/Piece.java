@@ -33,6 +33,10 @@ public abstract class Piece implements Positioned {
         return _yCoordinate;
     }
     
+    public BoolVar getOnBoard() {
+        return _onBoard;
+    }
+    
     /**
      * Detects when this piece is on the board.
      * A piece that's not on the board does not menace nor is menaced by
