@@ -1,5 +1,3 @@
-
-
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
@@ -21,13 +19,13 @@ import problems.IndependenceProblem;
 
 
 public class Main {
-    //CLI argument parsing
+    // CLI argument parsing
     private static Options options = new Options();
     private static CommandLine cmd;
     private static CommandLineParser parser = new DefaultParser();
     private static HelpFormatter formatter = new HelpFormatter();
     
-    //parsed arguments
+    // parsed arguments
     static boolean independence, domination;
     static String independenceOpt="i", dominationOpt="d";
     static boolean minimize;
@@ -58,6 +56,7 @@ public class Main {
     }
     
     private static void initOptions() {
+        // type of problem
         options.addOption(dominationOpt, false, "solve a domination problem");
         options.addOption(independenceOpt, false, "solve an independence problem");
         OptionGroup problemType = new OptionGroup();
@@ -66,16 +65,20 @@ public class Main {
         problemType.setRequired(true);
         options.addOptionGroup(problemType);
         
+        // objective
+        options.addOption(minimizeOpt, "minimize", false,
+                "minimize the total number of pieces\n"
+                + " - numbers of pieces are used as upper bounds\n"
+                + " - default number of pieces becomes a maximum value"
+        );
+        
+        // board parameters
         addPieceOption(boardSizeOpt, "size", "size of the board (default is 8)");
         addPieceOption(rooksOpt, "rooks", "number of rooks (default is 0)");
         addPieceOption(bishopsOpt, "bishops", "number of bishops (default is 0)");
         addPieceOption(knightsOpt, "knights", "number of knights (default is 0)");
-        options.addOption(minimizeOpt, "minimize", false,
-                "minimize the total number of pieces\n"
-                + " - numbers of pieces are used as maximums\n"
-                + " - default values become number of board squares"
-        );
         
+        // order of displayed arguments
         List<String> optionsOrder = Arrays.asList(
                 dominationOpt, independenceOpt, boardSizeOpt,
                 rooksOpt, bishopsOpt, knightsOpt, minimizeOpt
@@ -97,9 +100,15 @@ public class Main {
             System.out.println(e.getMessage());
             quit();
         }
+        
+        // type of problem
         independence = cmd.hasOption(independenceOpt);
         domination = cmd.hasOption(dominationOpt);
+        
+        // objective
         minimize = cmd.hasOption(minimizeOpt);
+        
+        // board parameters
         boardSize = getPieceOption(boardSizeOpt, 8);
         int defaultPieceCount = minimize ? boardSize*boardSize : 0;
         rooks = getPieceOption(rooksOpt, defaultPieceCount);
@@ -133,7 +142,7 @@ public class Main {
     }
     
     private static void solveProblem(AbstractCoverageProblem prob) {
-        //Add required pieces
+        // add required pieces
         for (int i=0; i<rooks; i++) {
             prob.addPiece(new Rook());
         }
