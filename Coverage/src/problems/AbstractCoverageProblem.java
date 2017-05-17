@@ -44,9 +44,17 @@ public class AbstractCoverageProblem {
     }
 
     public void addPiece(Piece piece) {
-        IntVar xCoordinate = _model.intVar(0, _boardSizeX-1);
-        IntVar yCoordinate = _model.intVar(0, _boardSizeX-1);
-        BoolVar onBoard = _model.boolVar();
+        addPiece(piece, 0, _boardSizeX-1, 0, _boardSizeY-1, false);
+    }
+    
+    public void addPiece(Piece piece, int positionX, int positionY) {
+        addPiece(piece, positionX, positionX, positionY, positionY, true);
+    }
+    
+    public void addPiece(Piece piece, int minX, int maxX, int minY, int maxY, boolean forceOnBoard) {
+        IntVar xCoordinate = _model.intVar(minX, maxX);
+        IntVar yCoordinate = _model.intVar(minY, maxY);
+        BoolVar onBoard = forceOnBoard ? _model.boolVar(true) : _model.boolVar();
         piece.setCoordinates(xCoordinate, yCoordinate, onBoard);
         _boardPieces.add(piece);
     }
