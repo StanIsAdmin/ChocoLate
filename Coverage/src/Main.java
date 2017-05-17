@@ -68,8 +68,7 @@ public class Main {
         // objective
         options.addOption(minimizeOpt, "minimize", false,
                 "minimize the total number of pieces\n"
-                + " - numbers of pieces are used as upper bounds\n"
-                + " - default number of pieces becomes a maximum value"
+                + " - numbers of pieces are used as upper bounds"
         );
         
         // board parameters
@@ -110,10 +109,9 @@ public class Main {
         
         // board parameters
         boardSize = getPieceOption(boardSizeOpt, 8);
-        int defaultPieceCount = minimize ? boardSize*boardSize : 0;
-        rooks = getPieceOption(rooksOpt, defaultPieceCount);
-        bishops = getPieceOption(bishopsOpt, defaultPieceCount);
-        knights = getPieceOption(knightsOpt, defaultPieceCount);
+        rooks = getPieceOption(rooksOpt, 0);
+        bishops = getPieceOption(bishopsOpt, 0);
+        knights = getPieceOption(knightsOpt, 0);
     }
         
     private static int getPieceOption(String optionName, int defaultValue) {
