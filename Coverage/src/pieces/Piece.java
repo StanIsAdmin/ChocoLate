@@ -38,7 +38,7 @@ public abstract class Piece implements Positioned {
     }
     
     /**
-     * Detects when this piece is on the board.
+     * Determines whether this piece is on the board.
      * A piece that's not on the board does not menace nor is menaced by
      * other pieces.
      * @return ReExpression that is true when the piece is on the board
@@ -48,7 +48,7 @@ public abstract class Piece implements Positioned {
     }
     
     /**
-     * Detects when this piece is in the same (x, y) position as other.
+     * Determines whether this piece is in the same (x, y) position as other.
      * @param other the positioned object whose position is compared to this
      * @return ReExpression that is true when this and other have same positions
      */
@@ -57,18 +57,20 @@ public abstract class Piece implements Positioned {
     }
     
     /**
-     * Detects when target is menaced by this, without collision detection.
+     * Determines whether target is menaced by this.
+     * Does not detect obstacles.
      * @param target the Positioned item to check
      * @return ReExpression that is true when this piece menaces target
      */
     public abstract ReExpression menaces(Positioned target);
     
     /**
-     * Same as previous, but with collision detection
+     * Determines whether target is menaced by this, while no obstacle blocks it.
+     * Calls isBlocked() in order to determine if any obstacle blocks the target.
      * @param target the Positioned item to check
      * @param obstacles the Pieces that may be blocking the target
      * @return ReExpression that is true when this menaces target, without
-     * any piece from others in the way
+     * any obstacle blocking it
      */
     public ReExpression menaces(Positioned target, List<Piece> obstacles) {
         ReExpression[] notBlocked = new ReExpression[obstacles.size()];
@@ -81,10 +83,13 @@ public abstract class Piece implements Positioned {
     }
     
     /**
-     * Detects when a menaced target is blocked by obstacle.
+     * Determines whether a menaced target is blocked by obstacle.
+     * The 'obstacle' blocks a menace if both 'obstacle' and 'target' are 
+     * menaced by 'this', and 'obstacle' is located in the rectangular area 
+     * between 'this' and 'target', bounds included.
      * @param target the target that we are checking
      * @param obstacle the piece that may be blocking our target
-     * @return ReExpression that is true when obstacle blocks target
+     * @return ReExpression that is true when obstacle blocks target for this
      */
     private ReExpression isBlocked(Positioned target, Piece obstacle) {
         return menaces(obstacle)
