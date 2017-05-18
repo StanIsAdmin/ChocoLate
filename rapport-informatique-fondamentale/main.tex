@@ -159,5 +159,27 @@ $C_9 = \{ (x_c,x_c), \{ (i_1,j_1,i_2,j_2) \in N^4 | \neg((i_1 = i_2) \wedge (j_1
 Notre implémentation des problèmes ci-dessus nous a permis de répondre aux questions 2.3, Bonus et 2.4 de l'énoncé. Le code qui en résulte est fournis en annexe de ce document. Il a été implémenté comme demandé à l'aide de l'outil \href{http://www.choco-solver.org/}{ChocoSolver}.
 
 \section{Surveillance de musée}
+La résolution du problème de musée a été réalisée en dérivant les résultats obtenus lors des exercices précédents. On s'est donc directement inspirés du problème de domination afin trouver une réponse adéquate. Avant de commencer le détail du problème sous la forme CSP, détaillons les données fournies avec le problème : 
+\begin{equation}
+O = {(i_1,j_1),\ldots,(i_o,j_o)} \vspace{0.1cm} 
+\end{equation}
+\begin{equation}
+V = {(i_1,j_1),\ldots,(i_v,j_v)}
+\end{equation}
+Où l'ensemble O représente les positions des cases occupées et l'ensemble V des cases vides.
+\subsection{Variables}
+Les variables qui seront utilisées pour la suite de l'exercice seront définies ici. On retrouvera les caméras est, ouest, nord et sud mais également les cases vides et occupées. Voici les variables utilisées : 
+\begin{center}
+$ X = \{x_v \in V \} \cup \{x_e\} \cup \{x_w\} \cup \{x_n\} \cup \{x_s\} \cup \{x_o \in O\} $
+\end{center}
+\subsection{Domaine}
 
 \end{document}
+
+
+
+
+
+
+
+
