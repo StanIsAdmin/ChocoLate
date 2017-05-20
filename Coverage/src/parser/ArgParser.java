@@ -27,6 +27,7 @@ public class ArgParser {
     static String independenceOpt="i", dominationOpt="d";
     static String minimizeOpt="m";
     static String boardSizeOpt="n", rooksOpt="t", bishopsOpt="f", knightsOpt="c";
+    static String inputFileOpt="F";
     
     // default values
     int boardSizeDefault = 8;
@@ -63,6 +64,14 @@ public class ArgParser {
         
         // board parameters
         addPieceOption(boardSizeOpt, "size", "size of the board (default is 8)");
+        options.addOption(inputFileOpt, true, "file representing the board");
+        OptionGroup boardParameters = new OptionGroup();
+        boardParameters.addOption(options.getOption(boardSizeOpt));
+        boardParameters.addOption(options.getOption(inputFileOpt));
+        boardParameters.setRequired(true);
+        options.addOptionGroup(boardParameters);
+        
+        // piece parameters
         addPieceOption(rooksOpt, "rooks", "number of rooks (default is 0)");
         addPieceOption(bishopsOpt, "bishops", "number of bishops (default is 0)");
         addPieceOption(knightsOpt, "knights", "number of knights (default is 0)");
@@ -90,7 +99,12 @@ public class ArgParser {
             quit();
         }
     }
-        
+    
+    private void quit() {
+        formatter.printHelp("board solver", options);
+        System.exit(1);
+    }     
+       
     private int getPieceOption(String optionName, int defaultValue) {
         int result = defaultValue;
         if (cmd.hasOption(optionName)) {
@@ -102,11 +116,6 @@ public class ArgParser {
             }
         }
         return result;
-    }
-    
-    private void quit() {
-        formatter.printHelp("board solver", options);
-        System.exit(1);
     }
     
     public boolean problemIsDomination() {
@@ -139,5 +148,17 @@ public class ArgParser {
     
     public int getKnightCount() {
         return getPieceOption(knightsOpt, pieceCountDefault);
+    }
+    
+    public boolean hasInputFile() {
+        return options.hasOption(inputFileOpt);
+    }
+    
+    public String getInputFile() {
+        if (hasInputFile()) {
+            return cmd.getOptionValue(inputFileOpt);
+        } else {
+            return null;
+        }
     }
 }

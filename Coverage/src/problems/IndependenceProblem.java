@@ -11,6 +11,10 @@ import pieces.Piece;
  */
 public class IndependenceProblem extends AbstractCoverageProblem {
 
+    public IndependenceProblem(String filePath) {
+        super(filePath);
+    }
+    
     public IndependenceProblem(int boardSizeX, int boardSizeY) {
         super(boardSizeX, boardSizeY);
     }

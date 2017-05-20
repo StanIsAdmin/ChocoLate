@@ -8,6 +8,7 @@ import org.chocosolver.solver.Model;
 import org.chocosolver.solver.expression.discrete.relational.ReExpression;
 import org.chocosolver.solver.variables.BoolVar;
 import org.chocosolver.solver.variables.IntVar;
+import parser.FileParser;
 import pieces.Position;
 
 
@@ -28,7 +29,17 @@ public class AbstractCoverageProblem {
     /*Pieces on the board*/
     protected List<Piece> _boardPieces = new ArrayList();
     
+    public AbstractCoverageProblem(String filePath) {
+        FileParser fileParser = new FileParser(filePath);
+        ctr(fileParser.getBoardSizeX(), fileParser.getBoardSizeY());
+        fileParser.fillProblemPieces(this);
+    }
+    
     public AbstractCoverageProblem(int boardSizeX, int boardSizeY) {
+        ctr(boardSizeX, boardSizeY);
+    }
+    
+    private void ctr(int boardSizeX, int boardSizeY) {
         _model = new Model();
         _boardSizeX = boardSizeX;
         _boardSizeY = boardSizeY;

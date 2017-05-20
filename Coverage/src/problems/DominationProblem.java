@@ -13,6 +13,10 @@ import pieces.Piece;
  */
 public class DominationProblem extends AbstractCoverageProblem {
 
+    public DominationProblem(String filePath) {
+        super(filePath);
+    }
+    
     public DominationProblem(int boardSizeX, int boardSizeY) {
         super(boardSizeX, boardSizeY);
     }
