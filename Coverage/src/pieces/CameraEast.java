@@ -7,7 +7,7 @@ import org.chocosolver.solver.expression.discrete.relational.ReExpression;
  */
 public class CameraEast extends Piece {
     @Override
-    public String getName() {
+    public String getPieceName() {
         return "E";
     }
     

@@ -11,7 +11,7 @@ import org.chocosolver.solver.expression.discrete.relational.ReExpression;
 public class Knight extends Piece {
     
     @Override
-    public String getName() {
+    public String getPieceName() {
         return "C";
     }
     

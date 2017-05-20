@@ -21,7 +21,7 @@ public abstract class Piece implements Positioned {
         _onBoard = onBoard;
     }
     
-    public abstract String getName();
+    public abstract String getPieceName();
     
     @Override
     public IntVar getX() {

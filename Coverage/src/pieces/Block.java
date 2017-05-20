@@ -8,7 +8,7 @@ import org.chocosolver.solver.expression.discrete.relational.ReExpression;
  */
 public class Block extends Piece {
     @Override
-    public String getName() {
+    public String getPieceName() {
         return "*";
     }
     
