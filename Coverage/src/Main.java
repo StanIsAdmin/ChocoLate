@@ -29,6 +29,9 @@ public class Main {
             } else {
                 prob = new IndependenceProblem(inputFilePath);
             }
+            addMuseumPieces(prob);
+            solveProblem(prob);
+            System.out.println(prob.getSolutionAsString());
         } else {
             int boardSizeX = _parser.getBoardSizeX();
             int boardSizeY = _parser.getBoardSizeY();
@@ -38,12 +41,14 @@ public class Main {
             } else {
                 prob = new IndependenceProblem(boardSizeX, boardSizeY);
             }
+            addCommandLinePieces(prob);
+            solveProblem(prob);
+            System.out.print(prob.getSolutionAsString().replace("-", "*"));
         }
-            
         solveProblem(prob);
     }
     
-    private static void solveProblem(AbstractCoverageProblem prob) {
+    private static void addCommandLinePieces(AbstractCoverageProblem prob) {
         // add required pieces
         for (int i=0; i<_parser.getRookCount(); i++) {
             prob.addPiece(new Rook());
@@ -54,13 +59,18 @@ public class Main {
         for (int i=0; i<_parser.getKnightCount(); i++) {
             prob.addPiece(new Knight());
         }
-        
+    }
+    
+    private static void addMuseumPieces(AbstractCoverageProblem prob) {
+        prob.addMaxPieces("N", "S", "E", "W");
+    }
+    
+    private static void solveProblem(AbstractCoverageProblem prob) {
         //Solve with objective
         if (_parser.objectiveIsMinimize()) {
             prob.solveMinimum();
         } else {
             prob.solve();
         }
-        System.out.print(prob.getSolutionAsString().replace("-", "*"));
     }
 }

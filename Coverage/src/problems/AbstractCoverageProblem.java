@@ -9,6 +9,7 @@ import org.chocosolver.solver.expression.discrete.relational.ReExpression;
 import org.chocosolver.solver.variables.BoolVar;
 import org.chocosolver.solver.variables.IntVar;
 import parser.FileParser;
+import pieces.PieceLoader;
 import pieces.Position;
 
 
@@ -28,21 +29,35 @@ public class AbstractCoverageProblem {
     
     /*Pieces on the board*/
     protected List<Piece> _boardPieces = new ArrayList();
+    private int _boardVoidPositions;
     
     public AbstractCoverageProblem(String filePath) {
         FileParser fileParser = new FileParser(filePath);
-        ctr(fileParser.getBoardSizeX(), fileParser.getBoardSizeY());
-        fileParser.fillProblemPieces(this);
+        initInstance(fileParser.getBoardSizeX(), fileParser.getBoardSizeY());
+        fillPieces(fileParser);
     }
     
     public AbstractCoverageProblem(int boardSizeX, int boardSizeY) {
-        ctr(boardSizeX, boardSizeY);
+        initInstance(boardSizeX, boardSizeY);
     }
     
-    private void ctr(int boardSizeX, int boardSizeY) {
+    private void fillPieces(FileParser fileParser) {
+        for (int x=0; x<_boardSizeX; x++) {
+            for (int y=0; y<_boardSizeY; y++) {
+                if (! fileParser.pieceIsVoidAt(x, y)) {
+                    String pieceName = fileParser.getPieceNameAt(x, y);
+                    Piece piece = PieceLoader.getPieceFromName(pieceName);
+                    addPiece(piece, x, y);
+                }
+            }
+        }
+    }
+    
+    private void initInstance(int boardSizeX, int boardSizeY) {
         _model = new Model();
         _boardSizeX = boardSizeX;
         _boardSizeY = boardSizeY;
+        _boardVoidPositions = boardSizeX * boardSizeY;
         initBoardPositions();
     }
     
@@ -60,6 +75,7 @@ public class AbstractCoverageProblem {
     
     public void addPiece(Piece piece, int positionX, int positionY) {
         addPiece(piece, positionX, positionX, positionY, positionY, true);
+        _boardVoidPositions -= 1;
     }
     
     public void addPiece(Piece piece, int minX, int maxX, int minY, int maxY, boolean forceOnBoard) {
@@ -68,6 +84,14 @@ public class AbstractCoverageProblem {
         BoolVar onBoard = forceOnBoard ? _model.boolVar(true) : _model.boolVar();
         piece.setCoordinates(xCoordinate, yCoordinate, onBoard);
         _boardPieces.add(piece);
+    }
+    
+    public void addMaxPieces(String ... pieceNames) {
+        for (String name : pieceNames) {
+            for (int i=0; i<_boardVoidPositions; i++) {
+                addPiece(PieceLoader.getPieceFromName(name));
+            }
+        }
     }
     
     protected void setConstraints() {
@@ -139,7 +163,7 @@ public class AbstractCoverageProblem {
         //Add pieces to board
         for (Piece piece : _boardPieces) {
             if (piece.getOnBoard().getValue() == 1) {
-                board[piece.getX().getValue()][piece.getY().getValue()] = piece.getName();
+                board[piece.getX().getValue()][piece.getY().getValue()] = piece.getPieceName();
             }
         }
         

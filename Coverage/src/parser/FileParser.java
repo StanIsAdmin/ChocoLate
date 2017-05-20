@@ -5,9 +5,6 @@ import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Scanner;
-import pieces.Piece;
-import pieces.PieceLoader;
-import problems.AbstractCoverageProblem;
 
 /**
  * Parses the input files provided when launching the program.
@@ -19,7 +16,7 @@ public class FileParser {
     private ArrayList<ArrayList<String>> _boardContent = new ArrayList();
     
     private final String _pieceSeparator = " ";
-    private final String _voidPiece = " ";
+    private final String _voidPieceName = " ";
     private int _voidPiecesCount = 0;
     
     public FileParser(String inputFile) {
@@ -55,7 +52,7 @@ public class FileParser {
             }
         }
         assert(_boardSizeX == newLine.size());
-        _voidPiecesCount += Collections.frequency(newLine, _voidPiece);
+        _voidPiecesCount += Collections.frequency(newLine, _voidPieceName);
         _boardContent.add(newLine);
         _boardSizeY += 1;
     }
@@ -68,16 +65,12 @@ public class FileParser {
         return _boardSizeY;
     }
     
-    public void fillProblemPieces(AbstractCoverageProblem problem) {
-        for (int x=0; x<_boardSizeX; x++) {
-            for (int y=0; y<_boardSizeY; y++) {
-                String pieceName = _boardContent.get(y).get(x);
-                if (! pieceName.equals(_voidPiece)) {
-                    Piece piece = PieceLoader.getPieceFromName(pieceName);
-                    problem.addPiece(piece, x, y);
-                }
-            }
-        }
+    public boolean pieceIsVoidAt(int x, int y) {
+        return getPieceNameAt(x, y).equals(_voidPieceName);
+    }
+    
+    public String getPieceNameAt(int x, int y) {
+        return _boardContent.get(y).get(x);
     }
     
     public int getVoidPiecesCount() {
