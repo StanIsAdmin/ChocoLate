@@ -1,0 +1,185 @@
+\documentclass[a4paper]{article}
+\usepackage[francais]{babel}
+\usepackage[utf8x]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[a4paper,top=3cm,bottom=2cm,left=3cm,right=3cm,marginparwidth=1.75cm]{geometry}
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage[colorinlistoftodos]{todonotes}
+\usepackage[colorlinks=true, allcolors=blue]{hyperref}
+
+\title{INFO-F-302 Informatique Fondamentale \\ Rapport du projet 2016-2017}
+\author{Nathan~Liccardo, Stanislas~Gueniffey}
+
+\begin{document}
+\maketitle
+
+\section{Introduction}
+La projet détaillé dans ce document avait deux objectifs : la modélisation de problèmes sous formes CSP et l'implémentation de ceux-ci en Java. Les réponses fournies seront formalisées selon le modèle CSP à savoir : variables, domaines et contraintes.
+
+\section{Problèmes d'échecs}
+Nous supposons ici que le lecteur est familier avec le \href{https://fr.wikipedia.org/wiki/%C3%89checs}{jeu d'échecs}. Les problèmes posés par la suite consistent à reproduire des scénarios plausibles dans le cadre d'une partie de ce jeu, dont certains paramètres ont été modifiés et respectant des contraintes supplémentaires (qui elles ne sont pas inhérentes au jeu).
+
+\subsection{Formalismes}
+Afin de pouvoir obtenir le problème sous la forme d'un CSP, nous avons posé certaines variables inhérentes au problème : 
+\begin{center}
+\begin{tabular}{|c|c|}
+\hline
+n & La taille du tableau d'échecs \\
+\hline
+$k_1$ & Le nombre de tours \\
+\hline
+$k_2$ & Le nombre de fous \\
+\hline
+$k_3$ & Le nombre de cavaliers  \\
+\hline
+\end{tabular}
+\end{center}
+Par facilité de notation, nous avons également définit les ensembles suivants qui sont directement liés aux places et pièces du jeu : 
+\begin{equation}
+N = \{1,\ldots,n\}
+\end{equation}
+\begin{equation}
+K_1 = \{ 1,\ldots,k_1 \}
+\end{equation}
+\begin{equation}
+K_2 = \{ 1,\ldots,k_2 \}
+\end{equation}
+\begin{equation}
+K_3 = \{ 1,\ldots,k_3 \}
+\end{equation}
+\begin{equation}
+K_4 = \{ 1,\ldots,(n*n)-(k_1+k_2+k_3) \}
+\end{equation}
+
+\subsection{Problème d'indépendance}
+Le problème d’indépendance consiste à déterminer s’il est possible d’assigner à chacune des pièce une position distincte sur l'échiquier de sorte qu’aucune pièce ne menace une autre pièce.\\ 
+\begin{center}
+\fbox{\fbox{\parbox{5.5in}{\centering
+Exprimer une instance quelconque du problème d'indépendance par un CSP équivalent, en exposant de manière claire les variables, leurs domaines respectifs et les contraintes à respecter. 
+}}}
+\end{center}
+
+\subsubsection{Variables}
+Nous avons défini dans un premier temps les variables représentant respectivement les tours, les fous et les cavaliers : 
+\begin{center}
+$X = \{ x_t | \ t \in K1 \}  \cup \{ x_f | \ f \in K2 \} \cup \{ x_c | \ c \in K3 \}$
+\end{center}
+\subsubsection{Domaines}
+Les pièces seront représentées sous la forme de coordonnées $X$ et $Y$. Ce sont ces deux valeurs qui formeront le domaine pour les trois types de pièces : 
+\begin{center}
+$D_t = \{ (i,j) | 1 \leq i \leq n \wedge 1 \leq j \leq n \}$ \\
+$D_f = \{ (i,j) | 1 \leq i \leq n \wedge 1 \leq j \leq n \}$ \\
+$D_c = \{ (i,j) | 1 \leq i \leq n \wedge 1 \leq j \leq n \}$
+\end{center}
+\subsubsection{Contraintes}
+Les contraintes s'appliquants sur les variables de ce problème doivent prendre en compte les deux demandes suivantes : 
+\begin{center}
+\textit{Aucune pièce ne peut en menacer une autre.} \vspace{0.1cm} \\
+\textit{Une case est occupée par maximum une pièce.}
+\end{center}
+Afin de s'assurer qu'aucune pièce n'en menace une autre, il est intéressant de détailler le cas de chaque types de pièces indépendamment. Commençons par les tours : 
+\begin{center}
+$C_1 = \{ (x_{t1},x_{t2}), \{(i_1,j_1,i_2,j_2) \in N^4 | i_1 \neq i_2 \wedge j_1 \neq j_2\} \}$
+$C_2 = \{ (x_{t1},x_{f2}), \{(i_1,j_1,i_2,j_2) \in N^4 | i_1 \neq i_2 \wedge j_1 \neq j_2\} \}$
+$C_3 = \{ (x_{t1},x_{c2}), \{(i_1,j_1,i_2,j_2) \in N^4 | i_1 \neq i_2 \wedge j_1 \neq j_2\} \}$
+\end{center}
+Dans un second temps, on demande à tous les fous de ne pas menacer une autre pièce : 
+\begin{center}
+$C_4 = \{ (x_{f1},x_{t2}), \{(i_1,j_1,i_2,j_2) \in N^4 | abs(i_1 - i_2) \neq abs(j_1 - j_2) \} \}$
+$C_5 = \{ (x_{f1},x_{f2}), \{(i_1,j_1,i_2,j_2) \in N^4 | abs(i_1 - i_2) \neq abs(j_1 - j_2) \} \}$
+$C_6 = \{ (x_{f1},x_{c2}), \{(i_1,j_1,i_2,j_2) \in N^4 | abs(i_1 - i_2) \neq abs(j_1 - j_2) \} \}$
+\end{center}
+Il reste à vérifier que les cavaliers ne menacent personne : 
+\begin{center}
+$C_7 = \{ (x_{c1},x_{t2}), \{(i_1,j_1,i_2,j_2) \in N^4 | (abs(i_1 - i_2) \neq 2 \wedge abs(j_1 - j_2) \neq 1) \wedge (abs(i_1 - i_2) \neq 1 \wedge abs(j_1 - j_2) \neq 2)\} $ \\
+$C_8 = \{ (x_{c1},x_{f2}), \{(i_1,j_1,i_2,j_2) \in N^4 | (abs(i_1 - i_2) \neq 2 \wedge abs(j_1 - j_2) \neq 1) \wedge (abs(i_1 - i_2) \neq 1 \wedge abs(j_1 - j_2) \neq 2)\} $ \\
+$C_9 = \{ (x_{c1},x_{c2}), \{(i_1,j_1,i_2,j_2) \in N^4 | (abs(i_1 - i_2) \neq 2 \wedge abs(j_1 - j_2) \neq 1) \wedge (abs(i_1 - i_2) \neq 1 \wedge abs(j_1 - j_2)) \neq 2\} $
+\end{center}
+Nous avons à présent vérifié que l'ensemble des pièces n'en menace aucune autre. Il faut en plus de cela s'assurer qu'il n'existe aucune case possédant deux pièces. On constate que la propriété est assurée pour tout les cas excepté lorsque nous comparons deux cavaliers : 
+\begin{center}
+$ C_{10} = \{ (x_{c1},x_{c2}), \{ i_1,j_1,i_2,j_2 \} \in N^4 | \neg((i_1 = i_2) \wedge (j_1 = j_2)) \}$
+\end{center}
+Nous pouvons à présent affirmer que le respect de ces contraintes sur les variables fournies nous permettra d'obtenir le résultat du problème d'indépendance. 
+
+\subsection{Problème de domination}
+Le problème de domination consiste à déterminer s’il est possible d’assigner à chacune des pièce une position distincte sur l'échiquier de sorte que chaque case soit occupée ou menacée par au moins une pièce.
+
+\begin{center}
+\fbox{\fbox{\parbox{5.5in}{\centering
+Exprimer une instance quelconque du problème de domination par un CSP équivalent, en exposant de manière claire les variables, leurs domaines respectifs, et les contraintes à respecter.
+}}}
+\end{center}
+
+\subsubsection{Variables}
+Les variables seront définies de la même manière que pour l'exercice précédent. Nous créons cependant une nouvelle variable représentant les cases vides : 
+\begin{center}
+$X = \{ x_t | \ t \in K1 \}  \cup \{ x_f | \ f \in K2 \} \cup \{ x_c | \ c \in K3 \} \cup \{ x_v | \ v \in K4 \}$
+\end{center}
+
+\subsubsection{Domaines}
+Les domaines sont définis de façon identique au problème précédent pour l'ensemble des pièces mises à disposition : 
+\begin{center}
+$D_t = \{ (i,j) \ | \ 1 \leq i \leq n \wedge 1 \leq j \leq n \}$ \\
+$D_f = \{ (i,j) \ | \ 1 \leq i \leq n \wedge 1 \leq j \leq n \}$ \\
+$D_c = \{ (i,j) \ | \ 1 \leq i \leq n \wedge 1 \leq j \leq n \}$ \\
+\end{center}
+Etant donné la présence de nouvelles variables, il faut également ajouté le domaine s'y appliquant à savoir : 
+\begin{center}
+$D_v = \{ (i,j) \ | \ 1 \leq i \leq (n*n)-(k1+k2+k3) \wedge 1 \leq j \leq (n*n)-(k1+k2+k3) \}$
+\end{center}
+
+\subsubsection{Contraintes}
+Les contraintes appliquées dans le cas du problème de domination seront quant à elles légèrement différentes. Dans ce nouveau problème, nous avons l'affirmation suivante qui doit être respectée :
+\begin{center}
+\textit{L'ensemble des cases libres doivent être menacées.} \vspace{0.1cm} \\
+\textit{Une case est occupée par maximum une pièce.}
+\end{center}
+Commençons par indiquer que pour toute case libre du plateau, il existe au moins une pièce qui la menace : 
+\begin{center}
+$C_1 = \{ (x_v,x_t), \{ (i_1,j_1,i_2,j_2) \in N^4 | i_1 = i_2 \vee j_1 = j_2 \} \}$ \\
+$\vee$ \\
+$C_2 = \{ (x_v,x_f), \{ (i_1,j_1,i_2,j_2) \in N^4 | abs(i_1 - i_2) = abs(j_1 - j_2) \} \}$ \\
+$\vee$ \\
+$C_3 = \{ (x_v,x_c), \{ (i_1,j_1,i_2,j_2) \in N^4 | (abs(i_1 - i_2) = 2 \wedge abs(j_1 - j_2) = 1) \vee (abs(i_1 - i_2) = 1 \wedge abs(j_1 - j_2)) = 2 \} \}$ \\
+$\vee$ \\
+$C_4 = \{ (x_v,x_c), \{ (i_1,j_1,i_2,j_2) \in N^4 | i_1 = i_2 \vee j_1 = j_2 \} \}$
+\end{center}
+Il ne reste plus qu'à empêcher deux pièces distinctes de se retrouver sur la même case du plateau. Pour ce faire, on reprend l'idée utilisée dans l'exercice précédent : 
+\begin{center}
+$C_4 = \{ (x_t,x_t), \{ (i_1,j_1,i_2,j_2) \in N^4 | \neg((i_1 = i_2) \wedge (j_1 = j_2)) \} \}$
+$C_5 = \{ (x_t,x_f), \{ (i_1,j_1,i_2,j_2) \in N^4 | \neg((i_1 = i_2) \wedge (j_1 = j_2) \} \}$
+$C_6 = \{ (x_t,x_c), \{ (i_1,j_1,i_2,j_2) \in N^4 | \neg((i_1 = i_2) \wedge (j_1 = j_2)\} \}$
+$C_7 = \{ (x_f,x_f), \{ (i_1,j_1,i_2,j_2) \in N^4 | \neg((i_1 = i_2) \wedge (j_1 = j_2)\} \}$
+$C_8 = \{ (x_f,x_c), \{ (i_1,j_1,i_2,j_2) \in N^4 | \neg((i_1 = i_2) \wedge (j_1 = j_2)\} \}$
+$C_9 = \{ (x_c,x_c), \{ (i_1,j_1,i_2,j_2) \in N^4 | \neg((i_1 = i_2) \wedge (j_1 = j_2)\} \}$
+\end{center}
+
+\subsection{Implémentation}
+Notre implémentation des problèmes ci-dessus nous a permis de répondre aux questions 2.3, Bonus et 2.4 de l'énoncé. Le code qui en résulte est fournis en annexe de ce document. Il a été implémenté comme demandé à l'aide de l'outil \href{http://www.choco-solver.org/}{ChocoSolver}.
+
+\section{Surveillance de musée}
+La résolution du problème de musée a été réalisée en dérivant les résultats obtenus lors des exercices précédents. On s'est donc directement inspirés du problème de domination afin trouver une réponse adéquate. Avant de commencer le détail du problème sous la forme CSP, détaillons les données fournies avec le problème : 
+\begin{equation}
+O = {(i_1,j_1),\ldots,(i_o,j_o)} \vspace{0.1cm} 
+\end{equation}
+\begin{equation}
+V = {(i_1,j_1),\ldots,(i_v,j_v)}
+\end{equation}
+Où l'ensemble O représente les positions des cases occupées et l'ensemble V des cases vides.
+\subsection{Variables}
+Les variables qui seront utilisées pour la suite de l'exercice seront définies ici. On retrouvera les caméras est, ouest, nord et sud mais également les cases vides et occupées. Voici les variables utilisées : 
+\begin{center}
+$ X = \{x_v \in V \} \cup \{x_e\} \cup \{x_w\} \cup \{x_n\} \cup \{x_s\} \cup \{x_o \in O\} $
+\end{center}
+\subsection{Domaine}
+
+\end{document}
+
+
+
+
+
+
+
+
