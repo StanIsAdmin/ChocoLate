@@ -5,6 +5,8 @@ import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Scanner;
+import pieces.Piece;
+import pieces.PieceLoader;
 import problems.AbstractCoverageProblem;
 
 /**
@@ -12,10 +14,13 @@ import problems.AbstractCoverageProblem;
  * Use to create instances of coverage problems from descriptive files.
  */
 public class FileParser {
-    private final String[] _supportedPieces = {" ", "*"};
     private int _boardSizeX = 0;
     private int _boardSizeY = 0;
     private ArrayList<ArrayList<String>> _boardContent = new ArrayList();
+    
+    private final String _pieceSeparator = " ";
+    private final String _voidPiece = " ";
+    private int _voidPiecesCount = 0;
     
     public FileParser(String inputFile) {
         try {
@@ -38,7 +43,7 @@ public class FileParser {
         
         // first line
         if (_boardSizeY == 0) {
-            String[] lineContent = line.split(" ");
+            String[] lineContent = line.split(_pieceSeparator);
             _boardSizeX = lineContent.length;
             Collections.addAll(newLine, lineContent);
         }
@@ -49,8 +54,8 @@ public class FileParser {
                 newLine.add(String.valueOf(line.charAt(i)));
             }
         }
-        System.out.println(String.join("-", newLine));
         assert(_boardSizeX == newLine.size());
+        _voidPiecesCount += Collections.frequency(newLine, _voidPiece);
         _boardContent.add(newLine);
         _boardSizeY += 1;
     }
@@ -64,6 +69,18 @@ public class FileParser {
     }
     
     public void fillProblemPieces(AbstractCoverageProblem problem) {
-        
+        for (int x=0; x<_boardSizeX; x++) {
+            for (int y=0; y<_boardSizeY; y++) {
+                String pieceName = _boardContent.get(y).get(x);
+                if (! pieceName.equals(_voidPiece)) {
+                    Piece piece = PieceLoader.getPieceFromName(pieceName);
+                    problem.addPiece(piece, x, y);
+                }
+            }
+        }
+    }
+    
+    public int getVoidPiecesCount() {
+        return _voidPiecesCount;
     }
 }
