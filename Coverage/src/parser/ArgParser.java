@@ -16,7 +16,7 @@ import org.apache.commons.cli.ParseException;
 /**
  * Parses the command-line arguments.
  */
-public class Parser {
+public class ArgParser {
     // CLI argument parsing
     private static final Options options = new Options();
     private static final CommandLineParser parser = new DefaultParser();
@@ -45,7 +45,7 @@ public class Parser {
         }
     }
     
-    public Parser() {
+    public ArgParser() {
         // type of problem
         options.addOption(dominationOpt, false, "solve a domination problem");
         options.addOption(independenceOpt, false, "solve an independence problem");

@@ -1,4 +1,4 @@
-import parser.Parser;
+import parser.ArgParser;
 import pieces.Bishop;
 import pieces.Knight;
 import pieces.Rook;
@@ -9,13 +9,13 @@ import problems.IndependenceProblem;
 
 public class Main {
     /* command-line arguments parser */
-    private static Parser _parser;
+    private static ArgParser _parser;
     
     /**
     * @param args the command line arguments
     */
     public static void main(String[] args) {
-        _parser = new Parser();
+        _parser = new ArgParser();
         _parser.parse(args);
         start();
     }
