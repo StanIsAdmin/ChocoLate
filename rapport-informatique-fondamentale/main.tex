@@ -195,7 +195,7 @@ C_{v_lf_m} = ( (x_{v_l},x_{f_m}), \{ (i_{v_l},i_{f_m},j_{v_l},j_{f_m}) \in N^4 |
 \end{align*}
 \begin{align*}
 \begin{split}
-C_{v_1c_1} = ( (x_{v_1},x_{c_1}), \{ (i_{v_1},i_{c_1},j_{v_1},j_{c_1}) \in N^4 | &  [ (i_{v_1} = i_{c_1}) \vee(j_{v_1} = j_{c_1}) ]
+C_{v_lc_m} = ( (x_{v_l},x_{c_m}), \{ (i_{v_l},i_{c_m},j_{v_l},j_{c_m}) \in N^4 | &  [ (i_{v_l} = i_{c_m}) \vee(j_{v_l} = j_{c_m}) ]
 \end{split}
 \end{align*}
 
@@ -261,7 +261,7 @@ C_{n_1c_2} = & \ ( (i_{n_1},i_{c_1},j_{n_1},j_{c_1}) \in V^2 | [ i_{n_1} = i_{c_
 \end{align*}
 Ces quatres contraintes nous assurent donc que pour chaque cases il existe au moins un capteur la visant. Etant donné que nous sommes dans un problème à minimum, il va falloir minimiser l'ensemble des solutions. Pour ce faire, il faut ajouter : 
 \begin{align*}
-C_s = \{ \nexists \ T_1 | \ (| T_1 | \leq T) \wedge (T \neq T_1) \}
+C_s = \{ \nexists \ T_1 | \ (| T_1 | <  | T | ) \wedge (T \neq T_1) \}
 \end{align*}
 Où $T$ et $T_1$ sont des ensembles formés de $E$,$W$,$N$,$S$. On obtient alors au final : 
 \begin{equation*}
