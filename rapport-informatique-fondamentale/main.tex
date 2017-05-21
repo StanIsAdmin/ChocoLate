@@ -201,6 +201,14 @@ C_{v_lc_m} = ( (x_{v_l},x_{c_m}), \{ (i_{v_l},i_{c_m},j_{v_l},j_{c_m}) \in N^4 |
 
 \subsection{Implémentation}
 Notre implémentation des problèmes ci-dessus nous a permis de répondre aux questions 2.3, Bonus et 2.4 de l'énoncé. Le code qui en résulte est fournis en annexe de ce document. Il a été implémenté comme demandé à l'aide de l'outil \href{http://www.choco-solver.org/}{ChocoSolver}.
+Afin de respecter les consignes imposées, nous avons également ajouté la possibilité de lire les commandes lors du lancement du programme. Voici les différentes options proposées : 
+\begin{center}
+\includegraphics[scale=0.7]{image.png}
+\end{center}
+On retrouve sur cette images l'ensemble des options disponibles étant donné que le programme réalisé est générique pour les trois problèmes donnés. Les programmes seront lancés via les commandes suivantes : 
+\begin{itemize}
+\item Domination : -d -n <taille tableau> -c <nombre max> -m
+\end{itemize}
 
 \section{Surveillance de musée}
 La résolution du problème de musée a été réalisée en dérivant les résultats obtenus lors des exercices précédents. On s'est donc directement inspirés du problème de domination afin trouver une réponse adéquate. Avant de commencer le détail du problème sous la forme CSP, détaillons les données fournies avec le problème : 
