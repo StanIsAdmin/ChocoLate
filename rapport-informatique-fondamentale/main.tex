@@ -36,6 +36,20 @@ $k_3$ & Le nombre de cavaliers  \\
 \hline
 \end{tabular}
 \end{center}
+
+\subsection{Problème d'indépendance}
+Le problème d’indépendance consiste à déterminer s’il est possible d’assigner à chacune des pièce une position distincte sur l'échiquier de sorte qu’aucune pièce ne menace une autre pièce.\\ 
+\begin{center}
+\fbox{\fbox{\parbox{5.5in}{\centering
+Exprimer une instance quelconque du problème d'indépendance par un CSP équivalent, en exposant de manière claire les variables, leurs domaines respectifs et les contraintes à respecter. 
+}}}
+\end{center}
+
+\subsubsection{Variables}
+Nous avons défini dans un premier temps les variables représentant respectivement les tours, les fous et les cavaliers : 
+\begin{center}
+$X = \{ x_t | \ t \in K1 \}  \cup \{ x_f | \ f \in K2 \} \cup \{ x_c | \ c \in K3 \}$
+\end{center}
 Par facilité de notation, nous avons également définit les ensembles suivants qui sont directement liés aux places et pièces du jeu : 
 \begin{equation*}
 N = \{1,\ldots,n\}
@@ -55,20 +69,6 @@ K = K_1 \cup K_2 \cup K_3
 \begin{equation*}
 K_4 = \{ v_1,\ldots,v_{(n*n)-(k_1+k_2+k_3)} \}
 \end{equation*}
-
-\subsection{Problème d'indépendance}
-Le problème d’indépendance consiste à déterminer s’il est possible d’assigner à chacune des pièce une position distincte sur l'échiquier de sorte qu’aucune pièce ne menace une autre pièce.\\ 
-\begin{center}
-\fbox{\fbox{\parbox{5.5in}{\centering
-Exprimer une instance quelconque du problème d'indépendance par un CSP équivalent, en exposant de manière claire les variables, leurs domaines respectifs et les contraintes à respecter. 
-}}}
-\end{center}
-
-\subsubsection{Variables}
-Nous avons défini dans un premier temps les variables représentant respectivement les tours, les fous et les cavaliers : 
-\begin{center}
-$X = \{ x_t | \ t \in K1 \}  \cup \{ x_f | \ f \in K2 \} \cup \{ x_c | \ c \in K3 \}$
-\end{center}
 \subsubsection{Domaines}
 Les pièces seront représentées sous la forme de coordonnées $X$ et $Y$. Ce sont ces deux valeurs qui formeront le domaine pour les trois types de pièces : 
 \begin{center}
@@ -140,6 +140,25 @@ Les variables seront définies de la même manière que pour l'exercice précéd
 \begin{center}
 $X = \{ x_t | \ t \in K1 \}  \cup \{ x_f | \ f \in K2 \} \cup \{ x_c | \ c \in K3 \} \cup \{ x_v | \ v \in K4 \}$
 \end{center}
+Par facilité de notation, nous avons également définit les ensembles suivants qui sont directement liés aux places et pièces du jeu : 
+\begin{equation*}
+N = \{1,\ldots,n\}
+\end{equation*}
+\begin{equation*}
+K_1 = \{ t_1,\ldots,t_{k1} \}
+\end{equation*}
+\begin{equation*}
+K_2 = \{ f_1,\ldots,f_{k2} \}
+\end{equation*}
+\begin{equation*}
+K_3 = \{ c_1,\ldots,c_{k3} \}
+\end{equation*}
+\begin{equation*}
+K = K_1 \cup K_2 \cup K_3
+\end{equation*}
+\begin{equation*}
+K_4 = \{ v_1,\ldots,v_{(n*n)-(k_1+k_2+k_3)} \}
+\end{equation*}
 
 \subsubsection{Domaines}
 Les domaines sont définis de façon identique au problème précédent pour l'ensemble des pièces mises à disposition : 
@@ -208,7 +227,11 @@ Afin de respecter les consignes imposées, nous avons également ajouté la poss
 On retrouve sur cette images l'ensemble des options disponibles étant donné que le programme réalisé est générique pour les trois problèmes donnés. Les programmes seront lancés via les commandes suivantes : 
 \begin{itemize}
 \item Domination : -d -n <taille tableau> -c <nombre max> -m
+\item Indépendance : -i -n <taille> -c <cavaliers> -t <tours> -f <fous>
 \end{itemize}
+
+\subsection{Bonus}
+Notre implémentation répond également à la question bonus. Il suffit d'ajouter une fonction reprenant la façon dont la pièce en menace une autre afin de pouvoir l'ajoutée à notre programme.
 
 \section{Surveillance de musée}
 La résolution du problème de musée a été réalisée en dérivant les résultats obtenus lors des exercices précédents. On s'est donc directement inspirés du problème de domination afin trouver une réponse adéquate. Avant de commencer le détail du problème sous la forme CSP, détaillons les données fournies avec le problème : 
