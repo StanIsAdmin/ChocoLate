@@ -151,7 +151,7 @@ public class ArgParser {
     }
     
     public boolean hasInputFile() {
-        return options.hasOption(inputFileOpt);
+        return cmd.hasOption(inputFileOpt);
     }
     
     public String getInputFile() {

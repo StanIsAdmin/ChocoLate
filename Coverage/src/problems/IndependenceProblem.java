@@ -22,8 +22,8 @@ public class IndependenceProblem extends AbstractCoverageProblem {
     @Override
     protected void setConstraints() {
         super.setConstraints();
-        for (Piece pieceA : _boardPieces) {
-            for (Piece pieceB : _boardPieces) {
+        for (Piece pieceA : _freePieces) {
+            for (Piece pieceB : _freePieces) {
                 if (pieceA != pieceB) {
                     pieceA.isOnBoard()
                         .and(pieceB.isOnBoard())

@@ -1,5 +1,6 @@
 import parser.ArgParser;
 import pieces.Bishop;
+import pieces.Camera;
 import pieces.Knight;
 import pieces.Rook;
 import problems.AbstractCoverageProblem;
@@ -51,18 +52,21 @@ public class Main {
     private static void addCommandLinePieces(AbstractCoverageProblem prob) {
         // add required pieces
         for (int i=0; i<_parser.getRookCount(); i++) {
-            prob.addPiece(new Rook());
+            prob.addFreePiece(new Rook());
         }
         for (int i=0; i<_parser.getBishopCount(); i++) {
-            prob.addPiece(new Bishop());
+            prob.addFreePiece(new Bishop());
         }
         for (int i=0; i<_parser.getKnightCount(); i++) {
-            prob.addPiece(new Knight());
+            prob.addFreePiece(new Knight());
         }
     }
     
     private static void addMuseumPieces(AbstractCoverageProblem prob) {
-        prob.addMaxPieces("N", "S", "E", "W");
+        int voidPositions = prob.getVoidPositionsCount();
+        for (int i=0; i<voidPositions; i++) {
+            prob.addFreePiece(new Camera());
+        }
     }
     
     private static void solveProblem(AbstractCoverageProblem prob) {

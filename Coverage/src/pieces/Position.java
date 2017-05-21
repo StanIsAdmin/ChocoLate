@@ -9,10 +9,14 @@ import org.chocosolver.solver.variables.IntVar;
 public class Position implements Positioned {
     protected IntVar _xCoordinate;
     protected IntVar _yCoordinate;
+    public int x;
+    public int y;
     
     public Position(Model solverModel, int xCoordinate, int yCoordinate) {
         _xCoordinate = solverModel.intVar(xCoordinate);
         _yCoordinate = solverModel.intVar(yCoordinate);
+        x = xCoordinate;
+        y = yCoordinate;
     }
 
     @Override

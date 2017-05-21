@@ -25,11 +25,11 @@ public class DominationProblem extends AbstractCoverageProblem {
     protected void setConstraints() {
         super.setConstraints();
         for (Position position : _boardPositions) {
-            ReExpression[] anyMenaces = new ReExpression[_boardPieces.size()];
+            ReExpression[] anyMenaces = new ReExpression[_freePieces.size()];
             int i=0;
-            for (Piece piece : _boardPieces) {
+            for (Piece piece : _freePieces) {
                 anyMenaces[i] = piece.isOnBoard()
-                    .and(piece.menaces(position, _boardPieces).or(piece.occupies(position)));
+                    .and(piece.menaces(position, _allPieces).or(piece.occupies(position)));
                 i++;
             }
             anyMenaces[0].or(anyMenaces).post();

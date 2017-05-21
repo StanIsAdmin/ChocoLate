@@ -9,7 +9,7 @@ import org.chocosolver.solver.expression.discrete.relational.ReExpression;
 import org.chocosolver.solver.variables.BoolVar;
 import org.chocosolver.solver.variables.IntVar;
 import parser.FileParser;
-import pieces.PieceLoader;
+import pieces.Block;
 import pieces.Position;
 
 
@@ -26,28 +26,28 @@ public class AbstractCoverageProblem {
     /*Board positions*/
     protected int _boardSizeX, _boardSizeY;
     protected List<Position> _boardPositions = new ArrayList();
+    private int _boardVoidPositions;
     
     /*Pieces on the board*/
-    protected List<Piece> _boardPieces = new ArrayList();
-    private int _boardVoidPositions;
+    protected List<Piece> _blockedPieces = new ArrayList();
+    protected List<Piece> _freePieces = new ArrayList();
+    protected List<Piece> _allPieces = new ArrayList();
     
     public AbstractCoverageProblem(String filePath) {
         FileParser fileParser = new FileParser(filePath);
         initInstance(fileParser.getBoardSizeX(), fileParser.getBoardSizeY());
-        fillPieces(fileParser);
+        fillBoard(fileParser);
     }
     
     public AbstractCoverageProblem(int boardSizeX, int boardSizeY) {
         initInstance(boardSizeX, boardSizeY);
     }
     
-    private void fillPieces(FileParser fileParser) {
+    private void fillBoard(FileParser fileParser) {
         for (int x=0; x<_boardSizeX; x++) {
             for (int y=0; y<_boardSizeY; y++) {
                 if (! fileParser.pieceIsVoidAt(x, y)) {
-                    String pieceName = fileParser.getPieceNameAt(x, y);
-                    Piece piece = PieceLoader.getPieceFromName(pieceName);
-                    addPiece(piece, x, y);
+                    addBlockedPiece(new Block(), x, y);
                 }
             }
         }
@@ -69,35 +69,34 @@ public class AbstractCoverageProblem {
         }
     }
 
-    public void addPiece(Piece piece) {
+    public void addFreePiece(Piece piece) {
         addPiece(piece, 0, _boardSizeX-1, 0, _boardSizeY-1, false);
+        _freePieces.add(piece);
     }
     
-    public void addPiece(Piece piece, int positionX, int positionY) {
+    public void addBlockedPiece(Piece piece, int positionX, int positionY) {
         addPiece(piece, positionX, positionX, positionY, positionY, true);
         _boardVoidPositions -= 1;
+        _boardPositions.removeIf(p -> p.x == positionX && p.y == positionY);
+        _blockedPieces.add(piece);
     }
     
-    public void addPiece(Piece piece, int minX, int maxX, int minY, int maxY, boolean forceOnBoard) {
+    private void addPiece(Piece piece, int minX, int maxX, int minY, int maxY, boolean forceOnBoard) {
         IntVar xCoordinate = _model.intVar(minX, maxX);
         IntVar yCoordinate = _model.intVar(minY, maxY);
         BoolVar onBoard = forceOnBoard ? _model.boolVar(true) : _model.boolVar();
         piece.setCoordinates(xCoordinate, yCoordinate, onBoard);
-        _boardPieces.add(piece);
+        _allPieces.add(piece);
     }
     
-    public void addMaxPieces(String ... pieceNames) {
-        for (String name : pieceNames) {
-            for (int i=0; i<_boardVoidPositions; i++) {
-                addPiece(PieceLoader.getPieceFromName(name));
-            }
-        }
+    public int getVoidPositionsCount() {
+        return _boardVoidPositions;
     }
     
     protected void setConstraints() {
         //No more than one piece per position
-        for (Piece pieceA : _boardPieces) {
-            for (Piece pieceB : _boardPieces) {
+        for (Piece pieceA : _freePieces) {
+            for (Piece pieceB : _allPieces) {
                 if (pieceA != pieceB) {
                     pieceA.occupies(pieceB).not().post();
                 }
@@ -107,20 +106,20 @@ public class AbstractCoverageProblem {
     
     private void enforceAllPieces() {
         //All pieces have to be used, _boardPiecesCount is fixed
-        for (Piece piece : _boardPieces) {
+        for (Piece piece : _freePieces) {
             piece.isOnBoard().post();
         }
     }
     
     private void enforceMinimumPieces() {
         //Pieces may be left unused, _boardPiecesCount is the number of pieces on the board
-        ReExpression[] onBoard = new ReExpression[_boardPieces.size()-1];
-        ReExpression onBoardFirst = _boardPieces.get(0).isOnBoard();
-        for (int i=0; i<_boardPieces.size()-1; i++) {
-            onBoard[i] = _boardPieces.get(i+1).isOnBoard();
+        ReExpression[] onBoard = new ReExpression[_freePieces.size()-1];
+        ReExpression onBoardFirst = _freePieces.get(0).isOnBoard();
+        for (int i=0; i<_freePieces.size()-1; i++) {
+            onBoard[i] = _freePieces.get(i+1).isOnBoard();
         }
         
-        IntVar boardPiecesCount = _model.intVar(0, _boardPieces.size());
+        IntVar boardPiecesCount = _model.intVar(0, _freePieces.size());
         onBoardFirst.add(onBoard).eq(boardPiecesCount).post();
         _model.setObjective(Model.MINIMIZE, boardPiecesCount);
     }
@@ -161,7 +160,7 @@ public class AbstractCoverageProblem {
         }
         
         //Add pieces to board
-        for (Piece piece : _boardPieces) {
+        for (Piece piece : _freePieces) {
             if (piece.getOnBoard().getValue() == 1) {
                 board[piece.getX().getValue()][piece.getY().getValue()] = piece.getPieceName();
             }
