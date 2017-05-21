@@ -124,19 +124,21 @@ public class AbstractCoverageProblem {
         
         _boardPiecesCount = _model.intVar(0, _boardPieces.size());
         onBoardFirst.add(onBoard).eq(_boardPiecesCount).post();
-        _model.setObjective(Model.MINIMIZE, _boardPiecesCount);
+        //_model.setObjective(Model.MINIMIZE, _boardPiecesCount);
     }
     
     public void solve() {
         setConstraints();
         enforceAllPieces();
-        _solved = _model.getSolver().solve();
+        //_solved = _model.getSolver().solve();
+        _solved = _model.getSolver().findSolution() != null;
     }
     
     public void solveMinimum() {
         _minimize = true;
         setConstraints();
         enforceMinimumPieces();
+        //_solved = _model.getSolver().findOptimalSolution(_boardPiecesCount, Model.MINIMIZE) != null;
         _solved = false;
         while (_model.getSolver().solve()) {
             _solved = true;
@@ -174,6 +176,9 @@ public class AbstractCoverageProblem {
         String result = "";
         if (_minimize) {
             result += "" + _boardPiecesCount.getValue() + "\n";
+        }
+        for (Piece piece : _boardPieces) {
+            result += piece.getPieceName() + " : " + piece.getX().getValue() + ", " + piece.getY().getValue() + "\n";
         }
         for (String[] boardLine : board) {
             result += String.join(separatorChar, boardLine);
