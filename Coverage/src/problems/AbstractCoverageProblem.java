@@ -22,6 +22,7 @@ public class AbstractCoverageProblem {
     /*Choco Solver model and its solution*/
     protected Model _model;
     private boolean _solved;
+    private boolean _minimize = false;
     
     /*Board positions*/
     protected int _boardSizeX, _boardSizeY;
@@ -30,6 +31,7 @@ public class AbstractCoverageProblem {
     /*Pieces on the board*/
     protected List<Piece> _boardPieces = new ArrayList();
     private int _boardVoidPositions;
+    IntVar _boardPiecesCount;
     
     public AbstractCoverageProblem(String filePath) {
         FileParser fileParser = new FileParser(filePath);
@@ -120,9 +122,9 @@ public class AbstractCoverageProblem {
             onBoard[i] = _boardPieces.get(i+1).isOnBoard();
         }
         
-        IntVar boardPiecesCount = _model.intVar(0, _boardPieces.size());
-        onBoardFirst.add(onBoard).eq(boardPiecesCount).post();
-        _model.setObjective(Model.MINIMIZE, boardPiecesCount);
+        _boardPiecesCount = _model.intVar(0, _boardPieces.size());
+        onBoardFirst.add(onBoard).eq(_boardPiecesCount).post();
+        _model.setObjective(Model.MINIMIZE, _boardPiecesCount);
     }
     
     public void solve() {
@@ -132,6 +134,7 @@ public class AbstractCoverageProblem {
     }
     
     public void solveMinimum() {
+        _minimize = true;
         setConstraints();
         enforceMinimumPieces();
         _solved = false;
@@ -169,6 +172,9 @@ public class AbstractCoverageProblem {
         
         //Create string from board
         String result = "";
+        if (_minimize) {
+            result += "" + _boardPiecesCount.getValue() + "\n";
+        }
         for (String[] boardLine : board) {
             result += String.join(separatorChar, boardLine);
             result += "\n";
