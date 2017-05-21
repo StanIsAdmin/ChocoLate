@@ -39,11 +39,12 @@ public class Camera extends Piece {
     
     @Override
     public ReExpression menaces(Positioned target) {
-        return super.menaces(target)
-            .and(_direction.eq(1)).and(getX().eq(target.getX())).and(getY().gt(target.getY()))
-            .and(_direction.eq(2)).and(getX().eq(target.getX()).and(getY().lt(target.getY())))
-            .and(_direction.eq(3)).and(getY().eq(target.getY()).and(getX().lt(target.getX())))
-            .and(_direction.eq(4)).and(getY().eq(target.getY()).and(getX().gt(target.getX())));
+        return super.menaces(target).and(
+            ((_direction.eq(1)).and(getX().eq(target.getX())).and(getY().gt(target.getY())))
+            .or((_direction.eq(2)).and(getX().eq(target.getX()).and(getY().lt(target.getY()))))
+            .or((_direction.eq(3)).and(getY().eq(target.getY()).and(getX().lt(target.getX()))))
+            .or((_direction.eq(4)).and(getY().eq(target.getY()).and(getX().gt(target.getX()))))
+        );
     }
 }
 
