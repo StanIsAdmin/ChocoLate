@@ -30,7 +30,7 @@ public class Main {
             } else {
                 prob = new IndependenceProblem(inputFilePath);
             }
-            addMuseumPieces(prob);
+            addFilePieces(prob);
             solveProblem(prob);
             System.out.println(prob.getSolutionAsString());
         } else {
@@ -50,7 +50,6 @@ public class Main {
     }
     
     private static void addCommandLinePieces(AbstractCoverageProblem prob) {
-        // add required pieces
         for (int i=0; i<_parser.getRookCount(); i++) {
             prob.addFreePiece(new Rook());
         }
@@ -62,7 +61,7 @@ public class Main {
         }
     }
     
-    private static void addMuseumPieces(AbstractCoverageProblem prob) {
+    private static void addFilePieces(AbstractCoverageProblem prob) {
         int voidPositions = prob.getVoidPositionsCount();
         for (int i=0; i<voidPositions; i++) {
             prob.addFreePiece(new Camera());
